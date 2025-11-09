@@ -1267,3 +1267,6 @@ def main():
         wp_attach=args.wp_attach or False,
         attachments=attachments or None,
     )
+
+if __name__ == "__main__":
+    main()
