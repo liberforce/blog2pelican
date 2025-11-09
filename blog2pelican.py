@@ -272,7 +272,7 @@ def blogger2fields(xml):
         yield (title, content, filename, date, author, None, tags, status, kind, "html")
 
 
-def dc2fields(file):
+def dotclear2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
     try:
         from bs4 import BeautifulSoup  # noqa: PLC0415
@@ -1268,7 +1268,7 @@ def main():
     if input_type == "blogger":
         fields = blogger2fields(args.input)
     elif input_type == "dotclear":
-        fields = dc2fields(args.input)
+        fields = dotclear2fields(args.input)
     elif input_type == "medium":
         fields = mediumposts2fields(args.input)
     elif input_type == "tumblr":
