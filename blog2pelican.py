@@ -299,13 +299,10 @@ def dc2fields(file):
             elif line.startswith("[post"):
                 in_post = True
             elif in_cat:
-                fields = line.split('","')
+                fields = line.strip('"').split('","')
                 if not line:
                     in_cat = False
                 else:
-                    # remove 1st and last ""
-                    fields[0] = fields[0][1:]
-                    # fields[-1] = fields[-1][:-1]
                     category_list[fields[0]] = fields[2]
             elif in_post:
                 if not line:
