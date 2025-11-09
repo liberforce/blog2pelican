@@ -1,4 +1,5 @@
 #! /bin/bash
 
 # Run pandoc from a docker container
-docker run --rm --volume "`pwd`:/data" --user `id -u`:`id -g` pandoc/core "$@"
+docker run --rm --volume "/tmp:/tmp" --volume "$(pwd):/data" --user $(id -u):$(id -g) pandoc/core "$@"
+
