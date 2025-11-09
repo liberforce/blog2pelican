@@ -969,9 +969,9 @@ def fields2pelican(
             posts_require_pandoc.append(filename)
 
         slug = (not disable_slugs and filename) or None
-        assert slug is None or filename == os.path.basename(filename), (
-            f"filename is not a basename: {filename}"
-        )
+        assert slug is None or filename == os.path.basename(
+            filename
+        ), f"filename is not a basename: {filename}"
 
         if wp_attach and attachments:
             try:
@@ -1267,6 +1267,7 @@ def main():
         wp_attach=args.wp_attach or False,
         attachments=attachments or None,
     )
+
 
 if __name__ == "__main__":
     main()

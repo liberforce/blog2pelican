@@ -9,3 +9,8 @@ dependencies = [
     "lxml>=6.0.2",
     "pelican>=4.11.0.post0",
 ]
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+]
