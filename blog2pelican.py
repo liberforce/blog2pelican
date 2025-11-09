@@ -271,19 +271,7 @@ def blogger2fields(xml):
 
         yield (title, content, filename, date, author, None, tags, status, kind, "html")
 
-
-def dotclear2fields(file):
-    """Opens a Dotclear export file, and yield pelican fields"""
-    try:
-        from bs4 import BeautifulSoup  # noqa: PLC0415
-    except ImportError:
-        error = (
-            "Missing dependency "
-            '"BeautifulSoup4" and "lxml" required '
-            "to import Dotclear files."
-        )
-        sys.exit(error)
-
+def dotclear_parse_sections(file):
     in_cat = False
     in_post = False
     category_list = {}
@@ -310,6 +298,22 @@ def dotclear2fields(file):
                     break
                 else:
                     posts.append(line)
+
+    return category_list, posts
+
+def dotclear2fields(file):
+    """Opens a Dotclear export file, and yield pelican fields"""
+    try:
+        from bs4 import BeautifulSoup  # noqa: PLC0415
+    except ImportError:
+        error = (
+            "Missing dependency "
+            '"BeautifulSoup4" and "lxml" required '
+            "to import Dotclear files."
+        )
+        sys.exit(error)
+
+    category_list, posts = dotclear_parse_sections(file)
 
     print(f"{len(posts)} posts read.")
 
