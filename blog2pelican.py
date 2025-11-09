@@ -751,7 +751,14 @@ def build_asciidoc_header(
 
 
 def build_markdown_header(
-    title, date, author, categories, tags, slug, status=None, attachments=None
+    title,
+    date,
+    author,
+    categories,
+    tags,
+    slug,
+    status=None,
+    attachments=None,
 ):
     """Build a header from a list of fields"""
     header = f"Title: {title}\n"
@@ -985,7 +992,14 @@ def fields2pelican(
         ext = get_ext(out_markup, in_markup)
         if ext == ".adoc":
             header = build_asciidoc_header(
-                title, date, author, categories, tags, slug, status, attachments
+                title,
+                date,
+                author,
+                categories,
+                tags,
+                slug,
+                status,
+                attachments,
             )
         elif ext == ".md":
             header = build_markdown_header(
@@ -1113,25 +1127,47 @@ def main():
 
     parser.add_argument(dest="input", help="The input file to read")
     parser.add_argument(
-        "--blogger", action="store_true", dest="blogger", help="Blogger XML export"
+        "--blogger",
+        action="store_true",
+        dest="blogger",
+        help="Blogger XML export",
     )
     parser.add_argument(
-        "--dotclear", action="store_true", dest="dotclear", help="Dotclear export"
+        "--dotclear",
+        action="store_true",
+        dest="dotclear",
+        help="Dotclear export",
     )
     parser.add_argument(
-        "--medium", action="store_true", dest="medium", help="Medium export"
+        "--medium",
+        action="store_true",
+        dest="medium",
+        help="Medium export",
     )
     parser.add_argument(
-        "--tumblr", action="store_true", dest="tumblr", help="Tumblr export"
+        "--tumblr",
+        action="store_true",
+        dest="tumblr",
+        help="Tumblr export",
     )
     parser.add_argument(
-        "--wpfile", action="store_true", dest="wpfile", help="Wordpress XML export"
+        "--wpfile",
+        action="store_true",
+        dest="wpfile",
+        help="Wordpress XML export",
     )
     parser.add_argument(
-        "--feed", action="store_true", dest="feed", help="Feed to parse"
+        "--feed",
+        action="store_true",
+        dest="feed",
+        help="Feed to parse",
     )
     parser.add_argument(
-        "-o", "--output", dest="output", default="content", help="Output path"
+        "-o",
+        "--output",
+        dest="output",
+        default="content",
+        help="Output path",
     )
     parser.add_argument(
         "-m",
