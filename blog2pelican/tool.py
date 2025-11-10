@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from typing import Any
 
 import argparse
 import logging
@@ -604,22 +605,7 @@ def get_input_type(args) -> str:
     return input_type
 
 
-def main():
-    argument_parser = build_argument_parser()
-    args = argument_parser.parse_args()
-    input_type = get_input_type(args)
-
-    if not os.path.exists(args.output):
-        try:
-            os.mkdir(args.output)
-        except OSError:
-            error = "Unable to create the output folder: " + args.output
-            sys.exit(error)
-
-    if args.wp_attach and input_type != "wordpress":
-        error = "You must be importing a wordpress xml to use the --wp-attach option"
-        sys.exit(error)
-
+def fields_from_input_type(input_type: str, args) -> tuple[Any]:
     if input_type == "blogger":
         from blog2pelican.parsers.blogger import blogger2fields
 
@@ -646,6 +632,26 @@ def main():
         fields = feed2fields(args.input)
     else:
         raise ValueError(f"Unhandled input_type {input_type}")
+
+    return fields
+
+
+def main():
+    argument_parser = build_argument_parser()
+    args = argument_parser.parse_args()
+    input_type = get_input_type(args)
+    fields = fields_from_input_type(input_type, args)
+
+    if not os.path.exists(args.output):
+        try:
+            os.mkdir(args.output)
+        except OSError:
+            error = "Unable to create the output folder: " + args.output
+            sys.exit(error)
+
+    if args.wp_attach and input_type != "wordpress":
+        error = "You must be importing a wordpress xml to use the --wp-attach option"
+        sys.exit(error)
 
     if args.wp_attach:
         attachments = get_attachments(args.input)
