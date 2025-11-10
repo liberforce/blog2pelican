@@ -461,7 +461,7 @@ def fields2pelican(
         download_attachments(output_path, urls)
 
 
-def main():
+def build_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Transform feed, Blogger, Dotclear, Tumblr, or "
         "WordPress files into reST (rst) or Markdown (md) files. "
@@ -578,8 +578,12 @@ def main():
     parser.add_argument(
         "-b", "--blogname", dest="blogname", help="Blog name (Tumblr import only)"
     )
+    return parser
 
-    args = parser.parse_args()
+
+def main():
+    argument_parser = build_argument_parser()
+    args = argument_parser.parse_args()
 
     input_type = None
     if args.blogger:
