@@ -568,9 +568,10 @@ def extract_fields(args: Any) -> tuple[Any]:
         blog_parser = DotclearParser()
         fields = blog_parser.parse(args.input)
     elif args.origin == "medium":
-        from blog2pelican.parsers.medium import mediumposts2fields
+        from blog2pelican.parsers.medium import MediumParser
 
-        fields = mediumposts2fields(args.input)
+        blog_parser = MediumParser()
+        fields = blog_parser.parse(args.input)
     elif args.origin == "tumblr":
         from blog2pelican.parsers.tumblr import tumblr2fields
 
