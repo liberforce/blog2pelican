@@ -83,6 +83,7 @@ dependencies = [
     { name = "feedparser" },
     { name = "lxml" },
     { name = "pelican" },
+    { name = "phpserialize" },
 ]
 
 [package.dev-dependencies]
@@ -101,6 +102,7 @@ requires-dist = [
     { name = "feedparser", specifier = ">=6.0.12" },
     { name = "lxml", specifier = ">=6.0.2" },
     { name = "pelican", specifier = ">=4.11.0.post0" },
+    { name = "phpserialize", specifier = ">=1.3" },
 ]
 
 [package.metadata.requires-dev]
@@ -550,6 +552,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/cf/ab/a5e863de66054c561
 wheels = [
     { url = "https://files.pythonhosted.org/packages/30/c3/a6bf5a88ec27887d31c740117b72df4f7a66910552ae3f6ccadaba5ae934/pelican-4.11.0.post0-py3-none-any.whl", hash = "sha256:522a26598d3555a48b8392a582843f96bc9dafd5efe16b8f6a0b292441290620", size = 1351261, upload-time = "2025-10-30T10:21:29.688Z" },
 ]
+
+[[package]]
+name = "phpserialize"
+version = "1.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ec/6d/437efc62d7327bcbcfa18f6bb27a0de3c8621e9af045dfc322d12eb310c9/phpserialize-1.3.tar.gz", hash = "sha256:bf672d312d203d09a84c26366fab8f438a3ffb355c407e69974b7ef2d39a0fa7", size = 7466, upload-time = "2012-01-22T12:48:05.828Z" }
 
 [[package]]
 name = "platformdirs"
