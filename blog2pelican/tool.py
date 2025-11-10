@@ -24,6 +24,7 @@ from docutils.utils import column_width
 from pelican.log import init
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import SafeDatetime, slugify
+from blog2pelican.helpers.soup import file_to_soup, import_bs4
 
 logger = logging.getLogger(__name__)
 
@@ -116,28 +117,6 @@ def decode_wp_content(content, br=True):
     )
 
     return content
-
-
-def _import_bs4():
-    """Import and return bs4, otherwise sys.exit."""
-    try:
-        import bs4  # noqa: PLC0415
-    except ImportError:
-        error = (
-            'Missing dependency "BeautifulSoup4" and "lxml" required to '
-            "import XML files."
-        )
-        sys.exit(error)
-    return bs4
-
-
-def file_to_soup(xml, features="xml"):
-    """Reads a file, returns soup."""
-    bs4 = _import_bs4()
-    with open(xml, encoding="utf-8") as infile:
-        xmlfile = infile.read()
-    soup = bs4.BeautifulSoup(xmlfile, features)
-    return soup
 
 
 def get_filename(post_name, post_id):
@@ -376,7 +355,7 @@ def strip_medium_post_content(soup) -> str:
     # Remove attributes
     # See https://stackoverflow.com/a/9045719
     invalid_attributes = ["name", "id", "class"]
-    bs4 = _import_bs4()
+    bs4 = import_bs4()
     for tag in soup.descendants:
         if isinstance(tag, bs4.element.Tag):
             tag.attrs = {
