@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from dataclasses import dataclass
 import argparse
 import datetime
 import json
@@ -271,6 +272,7 @@ def blogger2fields(xml):
 
         yield (title, content, filename, date, author, None, tags, status, kind, "html")
 
+
 def dotclear_parse_sections(file):
     in_cat = False
     in_post = False
@@ -301,6 +303,70 @@ def dotclear_parse_sections(file):
 
     return category_list, posts
 
+
+@dataclass
+class Post:
+    cat_ids: list[str]
+    post_creadt: str
+    post_format: str
+    post_title: str
+    post_excerpt: str
+    post_excerpt_xhtml: str
+    post_content: str
+    post_content_xhtml: str
+    # post_notes: str
+    # post_words: str
+    # post_status: str
+    # post_selected: str
+    # post_position: str
+    # post_open_comment: str
+    # post_open_tb: str
+    # nb_comment: str
+    # nb_trackback: str
+    post_meta: str
+    # redirect_url: str
+
+
+def dotclear_parse_post(post):
+    fields = post.split('","')
+    postobj = Post(
+        # post_id = fields[0][1:],
+        # blog_id = fields[1],
+        # user_id = fields[2],
+        cat_ids=fields[3],
+        # post_dt = fields[4],
+        # post_tz = fields[5],
+        post_creadt=fields[6],
+        # post_upddt = fields[7],
+        # post_password = fields[8],
+        # post_type = fields[9],
+        post_format=fields[10],
+        # post_url = fields[11],
+        # post_lang = fields[12],
+        post_title=fields[13],
+        post_excerpt=fields[14],
+        post_excerpt_xhtml=fields[15],
+        post_content=fields[16],
+        post_content_xhtml=fields[17],
+        # post_notes = fields[18],
+        # post_words = fields[19],
+        # post_status = fields[20],
+        # post_selected = fields[21],
+        # post_position = fields[22],
+        # post_open_comment = fields[23],
+        # post_open_tb = fields[24],
+        # nb_comment = fields[25],
+        # nb_trackback = fields[26],
+        post_meta=fields[27],
+        # redirect_url = fields[28][:-1],
+    )
+
+    # remove seconds
+    postobj.post_creadt = ":".join(postobj.post_creadt.split(":")[0:2])
+
+    return postobj
+
+
 def dotclear2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
     try:
@@ -319,53 +385,20 @@ def dotclear2fields(file):
 
     subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
     for post in posts:
-        fields = post.split('","')
-
-        # post_id = fields[0][1:]
-        # blog_id = fields[1]
-        # user_id = fields[2]
-        cat_ids = fields[3]
-        # post_dt = fields[4]
-        # post_tz = fields[5]
-        post_creadt = fields[6]
-        # post_upddt = fields[7]
-        # post_password = fields[8]
-        # post_type = fields[9]
-        post_format = fields[10]
-        # post_url = fields[11]
-        # post_lang = fields[12]
-        post_title = fields[13]
-        post_excerpt = fields[14]
-        post_excerpt_xhtml = fields[15]
-        post_content = fields[16]
-        post_content_xhtml = fields[17]
-        # post_notes = fields[18]
-        # post_words = fields[19]
-        # post_status = fields[20]
-        # post_selected = fields[21]
-        # post_position = fields[22]
-        # post_open_comment = fields[23]
-        # post_open_tb = fields[24]
-        # nb_comment = fields[25]
-        # nb_trackback = fields[26]
-        post_meta = fields[27]
-        # redirect_url = fields[28][:-1]
-
-        # remove seconds
-        post_creadt = ":".join(post_creadt.split(":")[0:2])
+        postobj = dotclear_parse_post(post)
 
         author = ""
         categories = []
         tags = []
 
-        if cat_ids:
+        if postobj.cat_ids:
             categories = [
-                category_list[cat_id].strip() for cat_id in cat_ids.split(",")
+                category_list[cat_id].strip() for cat_id in postobj.cat_ids.split(",")
             ]
 
         # Get tags related to a post
         tag = (
-            post_meta.replace("{", "")
+            postobj.post_meta.replace("{", "")
             .replace("}", "")
             .replace('a:1:s:3:\\"tag\\";a:', "")
             .replace("a:0:", "")
@@ -397,27 +430,27 @@ def dotclear2fields(file):
         you use the markdown plugin
         Ref: http://plugins.dotaddict.org/dc2/details/formatting-markdown
         """
-        if post_format == "markdown":
-            content = post_excerpt + post_content
+        if postobj.post_format == "markdown":
+            content = postobj.post_excerpt + postobj.post_content
         else:
-            content = post_excerpt_xhtml + post_content_xhtml
+            content = postobj.post_excerpt_xhtml + postobj.post_content_xhtml
             content = content.replace("\\n", "")
-            post_format = "html"
+            postobj.post_format = "html"
 
         kind = "article"  # TODO: Recognise pages
         status = "published"  # TODO: Find a way for draft posts
 
         yield (
-            post_title,
+            postobj.post_title,
             content,
-            slugify(post_title, regex_subs=subs),
-            post_creadt,
+            slugify(postobj.post_title, regex_subs=subs),
+            postobj.post_creadt,
             author,
             categories,
             tags,
             status,
             kind,
-            post_format,
+            postobj.post_format,
         )
 
 
