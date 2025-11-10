@@ -487,9 +487,10 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-m",
         "--markup",
+        choices=["rst", "markdown"],
         dest="markup",
         default="rst",
-        help="Output markup format (supports rst & markdown)",
+        help="Output markup format",
     )
     parser.add_argument(
         "--dir-cat",
