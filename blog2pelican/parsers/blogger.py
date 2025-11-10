@@ -1,6 +1,6 @@
 import os
 from pelican.utils import SafeDatetime
-from blog2pelican.helpers.soup import file_to_soup
+from blog2pelican.helpers.soup import soup_from_xml_file
 from .base import BlogParser
 
 
@@ -8,7 +8,7 @@ class BloggerParser(BlogParser):
     def parse_from_file(self, filename: str):
         """Opens a blogger XML file, and yield Pelican fields"""
 
-        soup = file_to_soup(filename)
+        soup = soup_from_xml_file(filename)
         entries = soup.feed.find_all("entry")
         for entry in entries:
             raw_kind = entry.find(

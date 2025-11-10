@@ -1,5 +1,5 @@
 import logging
-from blog2pelican.helpers.soup import file_to_soup
+from blog2pelican.helpers.soup import soup_from_xml_file
 from blog2pelican.tool import get_filename
 import re
 from pelican.utils import SafeDatetime
@@ -101,7 +101,7 @@ def decode_wp_content(content, br=True):
 def wp2fields(xml, wp_custpost=False):
     """Opens a wordpress XML file, and yield Pelican fields"""
 
-    soup = file_to_soup(xml)
+    soup = soup_from_xml_file(xml)
     items = soup.rss.channel.find_all("item")
     for item in items:
         if item.find("status").string in ["publish", "draft"]:

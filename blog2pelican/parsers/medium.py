@@ -1,4 +1,4 @@
-from blog2pelican.helpers.soup import file_to_soup, import_bs4
+from blog2pelican.helpers.soup import soup_from_xml_file, import_bs4
 import os
 import dateutil.parser
 import re
@@ -56,7 +56,7 @@ def strip_medium_post_content(soup) -> str:
 def mediumpost2fields(filepath: str) -> tuple:
     """Take an HTML post from a medium export, return Pelican fields."""
 
-    soup = file_to_soup(filepath, "html.parser")
+    soup = soup_from_xml_file(filepath, "html.parser")
     if not soup:
         raise ValueError(f"{filepath} could not be parsed by beautifulsoup")
     kind = "article"

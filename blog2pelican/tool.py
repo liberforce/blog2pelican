@@ -19,7 +19,7 @@ from docutils.utils import column_width
 from pelican.log import init
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
-from blog2pelican.helpers.soup import file_to_soup
+from blog2pelican.helpers.soup import soup_from_xml_file
 from blog2pelican.parsers.base import BlogParser
 
 logger = logging.getLogger(__name__)
@@ -195,7 +195,7 @@ def get_attachments(xml):
     """returns a dictionary of posts that have attachments with a list
     of the attachment_urls
     """
-    soup = file_to_soup(xml)
+    soup = soup_from_xml_file(xml)
     items = soup.rss.channel.find_all("item")
     names = {}
     attachments = []
