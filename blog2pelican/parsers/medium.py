@@ -1,7 +1,10 @@
-from blog2pelican.helpers.soup import soup_from_xml_file, import_bs4
 import os
-import dateutil.parser
 import re
+
+import dateutil.parser
+
+from blog2pelican.helpers.soup import import_bs4, soup_from_xml_file
+
 from .base import BlogParser
 
 

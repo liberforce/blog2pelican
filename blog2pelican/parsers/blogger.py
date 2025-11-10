@@ -1,6 +1,9 @@
 import os
+
 from pelican.utils import SafeDatetime
+
 from blog2pelican.helpers.soup import soup_from_xml_file
+
 from .base import BlogParser
 
 

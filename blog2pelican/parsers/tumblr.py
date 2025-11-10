@@ -1,8 +1,10 @@
 import datetime
-from pelican.utils import SafeDatetime, slugify
-from pelican.settings import DEFAULT_CONFIG
 import json
 import urllib.request as urllib_request
+
+from pelican.settings import DEFAULT_CONFIG
+from pelican.utils import SafeDatetime, slugify
+
 from .base import BlogParser
 
 

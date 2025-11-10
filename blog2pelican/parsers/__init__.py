@@ -1,5 +1,6 @@
-from .base import BlogParser
 from typing import Any
+
+from .base import BlogParser
 
 
 def create_blog_parser(origin: str, args: Any) -> BlogParser:

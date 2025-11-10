@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-from typing import Any
-
 import argparse
 import logging
 import os
@@ -9,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 from collections import defaultdict
+from typing import Any
 from urllib.error import URLError
 from urllib.parse import quote, urlparse, urlsplit, urlunsplit
 from urllib.request import urlretrieve
@@ -19,9 +18,10 @@ from docutils.utils import column_width
 from pelican.log import init
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
+
 from blog2pelican.helpers.soup import soup_from_xml_file
-from blog2pelican.parsers.base import BlogParser
 from blog2pelican.parsers import create_blog_parser
+from blog2pelican.parsers.base import BlogParser
 
 logger = logging.getLogger(__name__)
 

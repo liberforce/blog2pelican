@@ -1,7 +1,9 @@
-from dataclasses import dataclass
 import sys
+from dataclasses import dataclass
+
 import pelican.utils
 from pelican.settings import DEFAULT_CONFIG
+
 from .base import BlogParser
 
 

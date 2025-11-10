@@ -1,6 +1,8 @@
 import time
+
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
+
 from .base import BlogParser
 
 
