@@ -581,10 +581,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main():
-    argument_parser = build_argument_parser()
-    args = argument_parser.parse_args()
-
+def get_input_type(args) -> str:
     input_type = None
     if args.blogger:
         input_type = "blogger"
@@ -604,6 +601,13 @@ def main():
             "--medium, --tumblr, --wpfile or --feed options"
         )
         sys.exit(error)
+    return input_type
+
+
+def main():
+    argument_parser = build_argument_parser()
+    args = argument_parser.parse_args()
+    input_type = get_input_type(args)
 
     if not os.path.exists(args.output):
         try:
