@@ -20,6 +20,7 @@ from pelican.log import init
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
 from blog2pelican.helpers.soup import file_to_soup
+from blog2pelican.parsers.base import BlogParser
 
 logger = logging.getLogger(__name__)
 
@@ -554,10 +555,13 @@ def build_argument_parser() -> argparse.ArgumentParser:
 
 
 def extract_fields(args: Any) -> tuple[Any]:
-    if args.origin == "blogger":
-        from blog2pelican.parsers.blogger import blogger2fields
+    blog_parser: BlogParser | None = None
 
-        fields = blogger2fields(args.input)
+    if args.origin == "blogger":
+        from blog2pelican.parsers.blogger import BloggerParser
+
+        blog_parser = BloggerParser()
+        fields = blog_parser.parse_from_file(args.input)
     elif args.origin == "dotclear":
         from blog2pelican.parsers.dotclear import DotclearParser
 
