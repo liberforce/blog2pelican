@@ -21,6 +21,7 @@ from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
 from blog2pelican.helpers.soup import soup_from_xml_file
 from blog2pelican.parsers.base import BlogParser
+from blog2pelican.parsers import create_blog_parser
 
 logger = logging.getLogger(__name__)
 
@@ -555,42 +556,8 @@ def build_argument_parser() -> argparse.ArgumentParser:
 
 
 def extract_fields(args: Any) -> tuple[Any]:
-    blog_parser: BlogParser | None = None
-
-    if args.origin == "blogger":
-        from blog2pelican.parsers.blogger import BloggerParser
-
-        blog_parser = BloggerParser()
-        fields = blog_parser.parse(args.input)
-    elif args.origin == "dotclear":
-        from blog2pelican.parsers.dotclear import DotclearParser
-
-        blog_parser = DotclearParser()
-        fields = blog_parser.parse(args.input)
-    elif args.origin == "medium":
-        from blog2pelican.parsers.medium import MediumParser
-
-        blog_parser = MediumParser()
-        fields = blog_parser.parse(args.input)
-    elif args.origin == "tumblr":
-        from blog2pelican.parsers.tumblr import TumblrParser
-
-        blog_parser = TumblrParser(blogname=args.blogname)
-        fields = blog_parser.parse(args.input)
-    elif args.origin == "wordpress":
-        from blog2pelican.parsers.wordpress import WordPressParser
-
-        blog_parser = WordPressParser(custpost=args.wp_custpost)
-        fields = blog_parser.parse(args.input)
-    elif args.origin == "feed":
-        from blog2pelican.parsers.feed import FeedParser
-
-        blog_parser = FeedParser()
-        fields = blog_parser.parse(args.input)
-    else:
-        raise ValueError(f"Unhandled origin {args.origin}")
-
-    return fields
+    blog_parser: BlogParser = create_blog_parser(args.origin, args)
+    return blog_parser.parse(args.input)
 
 
 def create_output_dir_if_required(dirname: str):
