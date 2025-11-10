@@ -1,13 +1,44 @@
-import sys
+import logging
 from dataclasses import dataclass
 
 import pelican.utils
+import phpserialize
 from pelican.settings import DEFAULT_CONFIG
 
 from .base import BlogParser
 
+logger = logging.getLogger(__name__)
+
 
 class DotclearParser(BlogParser):
+    def _get_tags(self, post_meta, post_title=None):
+        """
+        Get tags related to a post
+        """
+        # Unclassified posts will get a special tag.
+        # This will make it easier to find them afterwards.
+        tags = ["Unclassified"]
+
+        # First, unescape characters that were escaped to store the data in
+        # the backup file in CSV-like format
+        post_meta = post_meta.replace("\\", "")
+        if not post_meta:
+            logger.debug("post has no metadata: '%s'", post_title)
+            return tags
+
+        tags_dict = phpserialize.loads(post_meta.encode("utf-8"))
+
+        if not tags_dict:
+            logger.debug("post has really no tags: '%s'", post_title)
+            return tags
+
+        if b"tag" not in tags_dict:
+            logger.debug("post has no tags: '%s'", post_title)
+            return tags
+
+        tags = [tag.decode("utf-8") for tag in tags_dict[b"tag"].values()]
+        return tags
+
     def _dotclear_parse_sections(self, file: str):
         in_cat = False
         in_post = False
@@ -79,16 +110,6 @@ class DotclearParser(BlogParser):
 
     def parse(self, path: str):
         """Opens a Dotclear export file, and yield pelican fields"""
-        try:
-            from bs4 import BeautifulSoup  # noqa: PLC0415
-        except ImportError:
-            error = (
-                "Missing dependency "
-                '"BeautifulSoup4" and "lxml" required '
-                "to import Dotclear files."
-            )
-            sys.exit(error)
-
         category_list, posts = self._dotclear_parse_sections(path)
 
         print(f"{len(posts)} posts read.")
@@ -102,42 +123,13 @@ class DotclearParser(BlogParser):
 
             author = authors.get(postobj.user_id, "unknown")
             categories = []
-            tags = []
+            tags = self._get_tags(postobj.post_meta, postobj.post_title)
 
             if postobj.cat_ids:
                 categories = [
                     category_list[cat_id].strip()
                     for cat_id in postobj.cat_ids.split(",")
                 ]
-
-            # Get tags related to a post
-            tag = (
-                postobj.post_meta.replace("{", "")
-                .replace("}", "")
-                .replace('a:1:s:3:\\"tag\\";a:', "")
-                .replace("a:0:", "")
-            )
-            if len(tag) > 1:
-                if len(tag[:1]) == 1:
-                    newtag = tag.split('"')[1]
-                    tags.append(
-                        BeautifulSoup(newtag, "xml")
-                        # bs4 always outputs UTF-8
-                        .decode("utf-8")
-                    )
-                else:
-                    i = 1
-                    j = 1
-                    while i <= int(tag[:1]):
-                        newtag = tag.split('"')[j].replace("\\", "")
-                        tags.append(
-                            BeautifulSoup(newtag, "xml")
-                            # bs4 always outputs UTF-8
-                            .decode("utf-8")
-                        )
-                        i = i + 1
-                        if j < int(tag[:1]) * 2:
-                            j = j + 2
 
             """
             dotclear2 does not use markdown by default unless
