@@ -636,18 +636,21 @@ def fields_from_input_type(input_type: str, args) -> tuple[Any]:
     return fields
 
 
+def create_output_dir_if_required(dirname: str):
+    if not os.path.exists(dirname):
+        try:
+            os.mkdir(dirname)
+        except OSError:
+            error = "Unable to create the output folder: " + dirname
+            sys.exit(error)
+
+
 def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
     input_type = get_input_type(args)
     fields = fields_from_input_type(input_type, args)
-
-    if not os.path.exists(args.output):
-        try:
-            os.mkdir(args.output)
-        except OSError:
-            error = "Unable to create the output folder: " + args.output
-            sys.exit(error)
+    create_output_dir_if_required(args.output)
 
     if args.wp_attach and input_type != "wordpress":
         error = "You must be importing a wordpress xml to use the --wp-attach option"
