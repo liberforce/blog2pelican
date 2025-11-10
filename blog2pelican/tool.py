@@ -561,12 +561,12 @@ def extract_fields(args: Any) -> tuple[Any]:
         from blog2pelican.parsers.blogger import BloggerParser
 
         blog_parser = BloggerParser()
-        fields = blog_parser.parse_from_file(args.input)
+        fields = blog_parser.parse(args.input)
     elif args.origin == "dotclear":
         from blog2pelican.parsers.dotclear import DotclearParser
 
         blog_parser = DotclearParser()
-        fields = blog_parser.parse_from_file(args.input)
+        fields = blog_parser.parse(args.input)
     elif args.origin == "medium":
         from blog2pelican.parsers.medium import mediumposts2fields
 

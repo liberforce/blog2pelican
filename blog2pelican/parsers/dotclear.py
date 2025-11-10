@@ -6,7 +6,7 @@ from .base import BlogParser
 
 
 class DotclearParser(BlogParser):
-    def _dotclear_parse_sections(self, file):
+    def _dotclear_parse_sections(self, file: str):
         in_cat = False
         in_post = False
         category_list = {}
@@ -75,7 +75,7 @@ class DotclearParser(BlogParser):
 
         return postobj
 
-    def parse_from_file(self, file):
+    def parse(self, path: str):
         """Opens a Dotclear export file, and yield pelican fields"""
         try:
             from bs4 import BeautifulSoup  # noqa: PLC0415
@@ -87,7 +87,7 @@ class DotclearParser(BlogParser):
             )
             sys.exit(error)
 
-        category_list, posts = self._dotclear_parse_sections(file)
+        category_list, posts = self._dotclear_parse_sections(path)
 
         print(f"{len(posts)} posts read.")
 

@@ -5,10 +5,10 @@ from .base import BlogParser
 
 
 class BloggerParser(BlogParser):
-    def parse_from_file(self, filename: str):
+    def parse(self, path: str):
         """Opens a blogger XML file, and yield Pelican fields"""
 
-        soup = soup_from_xml_file(filename)
+        soup = soup_from_xml_file(path)
         entries = soup.feed.find_all("entry")
         for entry in entries:
             raw_kind = entry.find(
