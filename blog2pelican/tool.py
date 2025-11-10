@@ -553,33 +553,33 @@ def build_argument_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def fields_from_input_type(input_type: str, args) -> tuple[Any]:
-    if input_type == "blogger":
+def extract_fields(args: Any) -> tuple[Any]:
+    if args.origin == "blogger":
         from blog2pelican.parsers.blogger import blogger2fields
 
         fields = blogger2fields(args.input)
-    elif input_type == "dotclear":
+    elif args.origin == "dotclear":
         from blog2pelican.parsers.dotclear import dotclear2fields
 
         fields = dotclear2fields(args.input)
-    elif input_type == "medium":
+    elif args.origin == "medium":
         from blog2pelican.parsers.medium import mediumposts2fields
 
         fields = mediumposts2fields(args.input)
-    elif input_type == "tumblr":
+    elif args.origin == "tumblr":
         from blog2pelican.parsers.tumblr import tumblr2fields
 
         fields = tumblr2fields(args.input, args.blogname)
-    elif input_type == "wordpress":
+    elif args.origin == "wordpress":
         from blog2pelican.parsers.wordpress import wp2fields
 
         fields = wp2fields(args.input, args.wp_custpost or False)
-    elif input_type == "feed":
+    elif args.origin == "feed":
         from blog2pelican.parsers.feed import feed2fields
 
         fields = feed2fields(args.input)
     else:
-        raise ValueError(f"Unhandled input_type {input_type}")
+        raise ValueError(f"Unhandled origin {args.origin}")
 
     return fields
 
@@ -596,11 +596,10 @@ def create_output_dir_if_required(dirname: str):
 def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
-    input_type = args.origin
-    fields = fields_from_input_type(input_type, args)
+    fields = extract_fields(args)
     create_output_dir_if_required(args.output)
 
-    if args.wp_attach and input_type != "wordpress":
+    if args.wp_attach and args.origin != "wordpress":
         error = "You must be importing a wordpress xml to use the --wp-attach option"
         sys.exit(error)
 
