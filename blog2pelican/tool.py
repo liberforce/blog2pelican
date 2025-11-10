@@ -31,7 +31,14 @@ def get_filename(post_name, post_id):
 
 
 def build_header(
-    title, date, author, categories, tags, slug, status=None, attachments=None
+    title,
+    date,
+    author,
+    categories,
+    tags,
+    slug,
+    status=None,
+    attachments=None,
 ):
     """Build a header from a list of fields"""
 
@@ -55,7 +62,14 @@ def build_header(
 
 
 def build_asciidoc_header(
-    title, date, author, categories, tags, slug, status=None, attachments=None
+    title,
+    date,
+    author,
+    categories,
+    tags,
+    slug,
+    status=None,
+    attachments=None,
 ):
     """Build a header from a list of fields"""
 
