@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import sys
 import pelican.utils
+from pelican.settings import DEFAULT_CONFIG
 
 
 def dotclear_parse_sections(file):
@@ -74,7 +75,7 @@ def dotclear_parse_post(post):
     return postobj
 
 
-def dotclear2fields(file, config):
+def dotclear2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
     try:
         from bs4 import BeautifulSoup  # noqa: PLC0415
@@ -90,7 +91,7 @@ def dotclear2fields(file, config):
 
     print(f"{len(posts)} posts read.")
 
-    subs = config["SLUG_REGEX_SUBSTITUTIONS"]
+    subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
     for post in posts:
         postobj = dotclear_parse_post(post)
 

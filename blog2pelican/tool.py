@@ -765,7 +765,7 @@ def main():
     elif input_type == "dotclear":
         from blog2pelican.parsers.dotclear import dotclear2fields
 
-        fields = dotclear2fields(args.input, DEFAULT_CONFIG)
+        fields = dotclear2fields(args.input)
     elif input_type == "medium":
         fields = mediumposts2fields(args.input)
     elif input_type == "tumblr":
