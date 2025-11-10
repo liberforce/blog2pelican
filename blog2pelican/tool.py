@@ -583,9 +583,10 @@ def extract_fields(args: Any) -> tuple[Any]:
         blog_parser = WordPressParser(custpost=args.wp_custpost)
         fields = blog_parser.parse(args.input)
     elif args.origin == "feed":
-        from blog2pelican.parsers.feed import feed2fields
+        from blog2pelican.parsers.feed import FeedParser
 
-        fields = feed2fields(args.input)
+        blog_parser = FeedParser()
+        fields = blog_parser.parse(args.input)
     else:
         raise ValueError(f"Unhandled origin {args.origin}")
 
