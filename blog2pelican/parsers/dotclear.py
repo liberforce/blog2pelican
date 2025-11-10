@@ -39,13 +39,13 @@ class DotclearParser(BlogParser):
         return category_list, posts
 
     def _dotclear_parse_post(self, post):
-        fields = post.split('","')
+        fields = post.strip('"').split('","')
         postobj = Post(
             # post_id = fields[0][1:],
             # blog_id = fields[1],
-            # user_id = fields[2],
+            user_id=fields[2],
             cat_ids=fields[3],
-            # post_dt = fields[4],
+            post_dt=fields[4],
             # post_tz = fields[5],
             post_creadt=fields[6],
             # post_upddt = fields[7],
@@ -61,6 +61,7 @@ class DotclearParser(BlogParser):
             post_content_xhtml=fields[17],
             # post_notes = fields[18],
             # post_words = fields[19],
+            post_meta=fields[20],
             # post_status = fields[20],
             # post_selected = fields[21],
             # post_position = fields[22],
@@ -68,7 +69,6 @@ class DotclearParser(BlogParser):
             # post_open_tb = fields[24],
             # nb_comment = fields[25],
             # nb_trackback = fields[26],
-            post_meta=fields[27],
             # redirect_url = fields[28][:-1],
         )
 
@@ -93,11 +93,14 @@ class DotclearParser(BlogParser):
 
         print(f"{len(posts)} posts read.")
 
+        # Remap author name for my blog
+        authors = {"LM2153-GANDI": "liberforce"}
+
         subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
         for post in posts:
             postobj = self._dotclear_parse_post(post)
 
-            author = ""
+            author = authors.get(postobj.user_id, "unknown")
             categories = []
             tags = []
 
@@ -167,7 +170,9 @@ class DotclearParser(BlogParser):
 
 @dataclass
 class Post:
+    user_id: str
     cat_ids: list[str]
+    post_dt: str
     post_creadt: str
     post_format: str
     post_title: str
