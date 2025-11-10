@@ -191,11 +191,11 @@ def get_out_filename(
     return out_filename
 
 
-def get_attachments(xml):
+def get_attachments(xml_filepath: str):
     """returns a dictionary of posts that have attachments with a list
     of the attachment_urls
     """
-    soup = soup_from_xml_file(xml)
+    soup = soup_from_xml_file(xml_filepath)
     items = soup.rss.channel.find_all("item")
     names = {}
     attachments = []
