@@ -578,9 +578,10 @@ def extract_fields(args: Any) -> tuple[Any]:
         blog_parser = TumblrParser(blogname=args.blogname)
         fields = blog_parser.parse(args.input)
     elif args.origin == "wordpress":
-        from blog2pelican.parsers.wordpress import wp2fields
+        from blog2pelican.parsers.wordpress import WordPressParser
 
-        fields = wp2fields(args.input, args.wp_custpost or False)
+        blog_parser = WordPressParser(custpost=args.wp_custpost)
+        fields = blog_parser.parse(args.input)
     elif args.origin == "feed":
         from blog2pelican.parsers.feed import feed2fields
 
