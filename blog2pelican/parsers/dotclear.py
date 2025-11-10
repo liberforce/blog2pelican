@@ -85,7 +85,7 @@ class DotclearParser(BlogParser):
             post_format=fields[10],
             # post_url = fields[11],
             # post_lang = fields[12],
-            post_title=fields[13],
+            title=fields[13],
             post_excerpt=fields[14],
             post_excerpt_xhtml=fields[15],
             post_content=fields[16],
@@ -123,7 +123,7 @@ class DotclearParser(BlogParser):
 
             author = authors.get(postobj.user_id, "unknown")
             categories = []
-            tags = self._get_tags(postobj.post_meta, postobj.post_title)
+            tags = self._get_tags(postobj.post_meta, postobj.title)
 
             if postobj.cat_ids:
                 categories = [
@@ -147,9 +147,9 @@ class DotclearParser(BlogParser):
             status = "published"  # TODO: Find a way for draft posts
 
             yield (
-                postobj.post_title,
+                postobj.title,
                 content,
-                pelican.utils.slugify(postobj.post_title, regex_subs=subs),
+                pelican.utils.slugify(postobj.title, regex_subs=subs),
                 postobj.post_creadt,
                 author,
                 categories,
@@ -167,7 +167,7 @@ class Post:
     post_dt: str
     post_creadt: str
     post_format: str
-    post_title: str
+    title: str
     post_excerpt: str
     post_excerpt_xhtml: str
     post_content: str
