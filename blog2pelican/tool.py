@@ -472,40 +472,10 @@ def build_argument_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(dest="input", help="The input file to read")
     parser.add_argument(
-        "--blogger",
-        action="store_true",
-        dest="blogger",
-        help="Blogger XML export",
-    )
-    parser.add_argument(
-        "--dotclear",
-        action="store_true",
-        dest="dotclear",
-        help="Dotclear export",
-    )
-    parser.add_argument(
-        "--medium",
-        action="store_true",
-        dest="medium",
-        help="Medium export",
-    )
-    parser.add_argument(
-        "--tumblr",
-        action="store_true",
-        dest="tumblr",
-        help="Tumblr export",
-    )
-    parser.add_argument(
-        "--wpfile",
-        action="store_true",
-        dest="wpfile",
-        help="Wordpress XML export",
-    )
-    parser.add_argument(
-        "--feed",
-        action="store_true",
-        dest="feed",
-        help="Feed to parse",
+        "--origin",
+        choices=["blogger", "dotclear", "medium", "tumblr", "wordpress", "feed"],
+        action="store",
+        help="Origin of the file to import",
     )
     parser.add_argument(
         "-o",
@@ -582,29 +552,6 @@ def build_argument_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def get_input_type(args) -> str:
-    input_type = None
-    if args.blogger:
-        input_type = "blogger"
-    elif args.dotclear:
-        input_type = "dotclear"
-    elif args.medium:
-        input_type = "medium"
-    elif args.tumblr:
-        input_type = "tumblr"
-    elif args.wpfile:
-        input_type = "wordpress"
-    elif args.feed:
-        input_type = "feed"
-    else:
-        error = (
-            "You must provide one of --blogger, --dotclear, "
-            "--medium, --tumblr, --wpfile or --feed options"
-        )
-        sys.exit(error)
-    return input_type
-
-
 def fields_from_input_type(input_type: str, args) -> tuple[Any]:
     if input_type == "blogger":
         from blog2pelican.parsers.blogger import blogger2fields
@@ -648,7 +595,7 @@ def create_output_dir_if_required(dirname: str):
 def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
-    input_type = get_input_type(args)
+    input_type = args.origin
     fields = fields_from_input_type(input_type, args)
     create_output_dir_if_required(args.output)
 

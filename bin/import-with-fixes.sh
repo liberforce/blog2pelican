@@ -6,4 +6,4 @@ this_script_dir=$(realpath $(dirname "${this_script}"))
 
 export PATH="${PATH}:${this_script_dir}:${this_script_dir}/.."
 
-python -m blog2pelican.tool --dotclear --markup markdown "$@"
+python -m blog2pelican.tool --origin=dotclear --markup=markdown "$@"
