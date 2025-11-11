@@ -121,7 +121,7 @@ class DotclearParser(BlogParser):
         for post in posts:
             postobj = self._dotclear_parse_post(post)
 
-            author = authors.get(postobj.user_id, "unknown")
+            author = authors.get(postobj.user_id, postobj.user_id)
             categories = []
             tags = self._get_tags(postobj.post_meta, postobj.title)
 
