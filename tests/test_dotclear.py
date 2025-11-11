@@ -4,7 +4,7 @@ from blog2pelican.entities.posts import PelicanPost
 
 def test_simple():
     parser = DotclearParser()
-    posts = parser.parse("tests/data/dotclear/simple.txt")
+    posts = parser.parse("tests/data/dotclear/standalone/posts/simple.txt")
     actual = PelicanPost(*next(posts))
     expected = PelicanPost(
         title="En direct d'Istanbul",
