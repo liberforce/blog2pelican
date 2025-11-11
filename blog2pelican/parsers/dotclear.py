@@ -174,7 +174,7 @@ class DotclearParser(BlogParser):
 
                 # Unescape the html
                 content = content.replace("\\n", "")
-                content = content.replace('\\', "")
+                content = content.replace("\\", "")
 
                 postobj.post_format = "html"
 
