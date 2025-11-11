@@ -142,6 +142,12 @@ class DotclearParser(BlogParser):
 
         return postobj
 
+    def _adapt_content(self, content: str) -> str:
+        # Unescape backquoted characters
+        content = content.replace("\\n", "")
+        content = content.replace("\\", "")
+        return content
+
     def parse(self, path: str):
         """Opens a Dotclear export file, and yield pelican fields"""
         category_list, posts = self._dotclear_parse_sections(path)
@@ -171,10 +177,7 @@ class DotclearParser(BlogParser):
                 content = postobj.post_excerpt + postobj.post_content
             else:
                 content = postobj.post_excerpt_xhtml + postobj.post_content_xhtml
-
-                # Unescape the html
-                content = content.replace("\\n", "")
-                content = content.replace("\\", "")
+                content = self._adapt_content(content)
 
                 postobj.post_format = "html"
 
