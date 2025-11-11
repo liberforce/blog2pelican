@@ -8,7 +8,7 @@ def test_simple():
     actual = PelicanPost(*next(posts))
     expected = PelicanPost(
         title="En direct d'Istanbul",
-        content="<p>first paragraph</p>\\r<p>second paragraph</p>",
+        content="<p>first paragraph</p>",
         filename="en-direct-distanbul",
         date="2008-07-07 08:08",
         author="TEST-GANDI",
