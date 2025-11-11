@@ -12,6 +12,40 @@ from .base import BlogParser
 logger = logging.getLogger(__name__)
 
 
+@dataclass
+class DotclearPost:
+    # post_id: str
+    # blog_id: str
+    user_id: str
+    cat_ids: list[str]
+    post_dt: str
+    # post_tz: str
+    post_creadt: str
+    # post_upddt: str
+    # post_password: str
+    # post_type: str
+    post_format: str
+    # post_url: str
+    # post_lang: str
+    post_title: str
+    post_excerpt: str
+    post_excerpt_xhtml: str
+    post_content: str
+    post_content_xhtml: str
+    # post_notes: str
+    # post_words: str
+    post_meta: str
+    # post_status: str
+    # post_selected: str
+    # post_open_comment: str
+    # post_position: str
+    # post_open_comment: str
+    # post_open_tb: str
+    # nb_comment: str
+    # nb_trackback: str
+    # post_position: str
+
+
 class DotclearParser(BlogParser):
     def _get_tags(self, post_meta, post_title=None):
         """
@@ -71,7 +105,7 @@ class DotclearParser(BlogParser):
 
         return category_list, posts
 
-    def _dotclear_parse_post(self, post):
+    def _dotclear_parse_post(self, post) -> DotclearPost:
         fields = post.strip('"').split('","')
         postobj = DotclearPost(
             # post_id = fields[0][1:],
@@ -159,37 +193,3 @@ class DotclearParser(BlogParser):
                 kind,
                 postobj.post_format,
             )
-
-
-@dataclass
-class DotclearPost:
-    # post_id: str
-    # blog_id: str
-    user_id: str
-    cat_ids: list[str]
-    post_dt: str
-    # post_tz: str
-    post_creadt: str
-    # post_upddt: str
-    # post_password: str
-    # post_type: str
-    post_format: str
-    # post_url: str
-    # post_lang: str
-    post_title: str
-    post_excerpt: str
-    post_excerpt_xhtml: str
-    post_content: str
-    post_content_xhtml: str
-    # post_notes: str
-    # post_words: str
-    post_meta: str
-    # post_status: str
-    # post_selected: str
-    # post_open_comment: str
-    # post_position: str
-    # post_open_comment: str
-    # post_open_tb: str
-    # nb_comment: str
-    # nb_trackback: str
-    # post_position: str
