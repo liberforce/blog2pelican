@@ -1,1 +1,2 @@
-[category cat_id,blog_id,cat_title,cat_url,cat_desc,cat_position,cat_lft,cat_rgt]
+
+[comment comment_id,post_id,comment_dt,comment_tz,comment_upddt,comment_author,comment_email,comment_site,comment_content,comment_words,comment_ip,comment_status,comment_spam_status,comment_trackback,comment_spam_filter]

@@ -1,1 +1,2 @@
-[category cat_id,blog_id,cat_title,cat_url,cat_desc,cat_position,cat_lft,cat_rgt]
+
+[media media_id,user_id,media_path,media_title,media_file,media_meta,media_dt,media_creadt,media_upddt,media_private,media_dir]

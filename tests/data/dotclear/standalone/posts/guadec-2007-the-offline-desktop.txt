@@ -1,0 +1,11 @@
+///DOTCLEAR|2.1.5|single
+
+[category cat_id,blog_id,cat_title,cat_url,cat_desc,cat_position,cat_lft,cat_rgt]
+"15948","f17b77e426fa46cb925b4f2951cf7627","Life / Vie quotidienne","Life-Vie-quotidienne","","10490","2","3"
+"15949","f17b77e426fa46cb925b4f2951cf7627","Gossip / Blabla","Gossip-Blabla","","10491","4","5"
+"15950","f17b77e426fa46cb925b4f2951cf7627","Computers / Informatique","Computers-Informatique","","10492","6","7"
+"15951","f17b77e426fa46cb925b4f2951cf7627","Ecology  / Ecologie","Ecology-Ecologie","","10493","8","9"
+"15952","f17b77e426fa46cb925b4f2951cf7627","Politics / Politique","Politics-Politique","","10494","10","11"
+
+[post post_id,blog_id,user_id,cat_id,post_dt,post_tz,post_creadt,post_upddt,post_password,post_type,post_format,post_url,post_lang,post_title,post_excerpt,post_excerpt_xhtml,post_content,post_content_xhtml,post_notes,post_words,post_meta,post_status,post_selected,post_open_comment,post_open_tb,nb_comment,nb_trackback,post_position]
+"158814","f17b77e426fa46cb925b4f2951cf7627","LM2153-GANDI","15950","2007-07-23 23:43:00","Europe/Paris","2007-09-26 21:43:30","2007-10-02 23:52:57","","post","xhtml","2007/07/23/GUADEC-2007:-The-offline-desktop","en","GUADEC 2007: The offline desktop","","","<p><img alt=\"\" src=\"/public/guadec/2007/offline-desktop.png\" /></p>","<p><img alt=\"\" src=\"/public/guadec/2007/offline-desktop.png\" /></p>","","guadec 2007 the offline desktop","a:1:{s:3:\"tag\";a:2:{i:0;s:15:\"bande dessinée\";i:1;s:6:\"GUADEC\";}}","1","0","0","1","0","0","0"

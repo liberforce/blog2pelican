@@ -1,1 +1,2 @@
-[category cat_id,blog_id,cat_title,cat_url,cat_desc,cat_position,cat_lft,cat_rgt]
+
+[ping post_id,ping_url,ping_dt]

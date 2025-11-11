@@ -1,1 +1,2 @@
-[category cat_id,blog_id,cat_title,cat_url,cat_desc,cat_position,cat_lft,cat_rgt]
+
+[link link_id,blog_id,link_href,link_title,link_desc,link_lang,link_xfn,link_position]
