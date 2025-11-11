@@ -71,7 +71,7 @@ class DotclearParser(BlogParser):
 
     def _dotclear_parse_post(self, post):
         fields = post.strip('"').split('","')
-        postobj = Post(
+        postobj = DotclearPost(
             # post_id = fields[0][1:],
             # blog_id = fields[1],
             user_id=fields[2],
@@ -161,7 +161,7 @@ class DotclearParser(BlogParser):
 
 
 @dataclass
-class Post:
+class DotclearPost:
     user_id: str
     cat_ids: list[str]
     post_dt: str
