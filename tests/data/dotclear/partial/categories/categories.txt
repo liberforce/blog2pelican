@@ -1,0 +1,6 @@
+[category cat_id,blog_id,cat_title,cat_url,cat_desc,cat_position,cat_lft,cat_rgt]
+"15948","f17b77e426fa46cb925b4f2951cf7627","Life / Vie quotidienne","Life-Vie-quotidienne","","10490","2","3"
+"15949","f17b77e426fa46cb925b4f2951cf7627","Gossip / Blabla","Gossip-Blabla","","10491","4","5"
+"15950","f17b77e426fa46cb925b4f2951cf7627","Computers / Informatique","Computers-Informatique","","10492","6","7"
+"15951","f17b77e426fa46cb925b4f2951cf7627","Ecology  / Ecologie","Ecology-Ecologie","","10493","8","9"
+"15952","f17b77e426fa46cb925b4f2951cf7627","Politics / Politique","Politics-Politique","","10494","10","11"

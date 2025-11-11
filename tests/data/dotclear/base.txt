@@ -1,0 +1,6 @@
+///DOTCLEAR|2.1.5|single
+
+[category cat_id,blog_id,cat_title,cat_url,cat_desc,cat_position,cat_lft,cat_rgt]
+"12345","f17b77e426fa46cb925b4f2951cf7627","Life","Life","","10490","2","3"
+
+[post post_id,blog_id,user_id,cat_id,post_dt,post_tz,post_creadt,post_upddt,post_password,post_type,post_format,post_url,post_lang,post_title,post_excerpt,post_excerpt_xhtml,post_content,post_content_xhtml,post_notes,post_words,post_meta,post_status,post_selected,post_open_comment,post_open_tb,nb_comment,nb_trackback,post_position]

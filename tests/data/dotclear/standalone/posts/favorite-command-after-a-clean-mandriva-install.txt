@@ -1,0 +1,11 @@
+///DOTCLEAR|2.1.5|single
+
+[category cat_id,blog_id,cat_title,cat_url,cat_desc,cat_position,cat_lft,cat_rgt]
+"15948","f17b77e426fa46cb925b4f2951cf7627","Life / Vie quotidienne","Life-Vie-quotidienne","","10490","2","3"
+"15949","f17b77e426fa46cb925b4f2951cf7627","Gossip / Blabla","Gossip-Blabla","","10491","4","5"
+"15950","f17b77e426fa46cb925b4f2951cf7627","Computers / Informatique","Computers-Informatique","","10492","6","7"
+"15951","f17b77e426fa46cb925b4f2951cf7627","Ecology  / Ecologie","Ecology-Ecologie","","10493","8","9"
+"15952","f17b77e426fa46cb925b4f2951cf7627","Politics / Politique","Politics-Politique","","10494","10","11"
+
+[post post_id,blog_id,user_id,cat_id,post_dt,post_tz,post_creadt,post_upddt,post_password,post_type,post_format,post_url,post_lang,post_title,post_excerpt,post_excerpt_xhtml,post_content,post_content_xhtml,post_notes,post_words,post_meta,post_status,post_selected,post_open_comment,post_open_tb,nb_comment,nb_trackback,post_position]
+"224075","f17b77e426fa46cb925b4f2951cf7627","LM2153-GANDI","15950","2008-03-26 00:48:00","Europe/Paris","2008-03-25 23:49:23","2008-03-25 23:49:48","","post","xhtml","2008/03/26/Favorite-command-after-a-clean-Mandriva-Install","en","Favorite command after a clean Mandriva Install...","","","<pre>urpme -a mono</pre>","<pre>\nurpme -a mono\n</pre>","","favorite command after clean mandriva install urpme mono","a:1:{s:3:\"tag\";a:1:{i:0;s:8:\"mandriva\";}}","1","0","1","0","10","0","0"
