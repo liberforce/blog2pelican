@@ -30,7 +30,7 @@ def test_shortest_post():
         content="<pre>urpme -a mono</pre>",
         filename="favorite-command-after-a-clean-mandriva-install",
         date="2008-03-26 00:48",
-        author="LM-2153-GANDI",
+        author="LM2153-GANDI",
         categories=["Computers / Informatique"],
         tags=["mandriva"],
         status="published",

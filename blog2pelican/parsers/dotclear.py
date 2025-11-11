@@ -114,14 +114,11 @@ class DotclearParser(BlogParser):
 
         print(f"{len(posts)} posts read.")
 
-        # Remap author name for my blog
-        authors = {"LM2153-GANDI": "liberforce"}
-
         subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
         for post in posts:
             postobj = self._dotclear_parse_post(post)
 
-            author = authors.get(postobj.user_id, postobj.user_id)
+            author = postobj.user_id
             categories = []
             tags = self._get_tags(postobj.post_meta, postobj.title)
 
