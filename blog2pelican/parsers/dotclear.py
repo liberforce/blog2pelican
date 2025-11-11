@@ -79,7 +79,7 @@ class DotclearParser(BlogParser):
             user_id=fields[2],
             cat_ids=fields[3],
             # post_dt
-            publication_date=pelican_format_datetime(fields[4]),
+            post_dt=pelican_format_datetime(fields[4]),
             # post_tz = fields[5],
             post_creadt=pelican_format_datetime(fields[6]),
             # post_upddt = pelican_format_datetime(fields[7]),
@@ -88,7 +88,7 @@ class DotclearParser(BlogParser):
             post_format=fields[10],
             # post_url = fields[11],
             # post_lang = fields[12],
-            title=fields[13],
+            post_title=fields[13],
             post_excerpt=fields[14],
             post_excerpt_xhtml=fields[15],
             post_content=fields[16],
@@ -120,7 +120,7 @@ class DotclearParser(BlogParser):
 
             author = postobj.user_id
             categories = []
-            tags = self._get_tags(postobj.post_meta, postobj.title)
+            tags = self._get_tags(postobj.post_meta, postobj.post_title)
 
             if postobj.cat_ids:
                 categories = [
@@ -144,10 +144,10 @@ class DotclearParser(BlogParser):
             status = "published"  # TODO: Find a way for draft posts
 
             yield (
-                postobj.title,
+                postobj.post_title,
                 content,
-                pelican.utils.slugify(postobj.title, regex_subs=subs),
-                postobj.publication_date,
+                pelican.utils.slugify(postobj.post_title, regex_subs=subs),
+                postobj.post_dt,
                 author,
                 categories,
                 tags,
@@ -159,24 +159,33 @@ class DotclearParser(BlogParser):
 
 @dataclass
 class DotclearPost:
+    # post_id: str
+    # blog_id: str
     user_id: str
     cat_ids: list[str]
-    publication_date: str
+    post_dt: str
+    # post_tz: str
     post_creadt: str
+    # post_upddt: str
+    # post_password: str
+    # post_type: str
     post_format: str
-    title: str
+    # post_url: str
+    # post_lang: str
+    post_title: str
     post_excerpt: str
     post_excerpt_xhtml: str
     post_content: str
     post_content_xhtml: str
     # post_notes: str
     # post_words: str
+    post_meta: str
     # post_status: str
     # post_selected: str
+    # post_open_comment: str
     # post_position: str
     # post_open_comment: str
     # post_open_tb: str
     # nb_comment: str
     # nb_trackback: str
-    post_meta: str
-    # redirect_url: str
+    # post_position: str
