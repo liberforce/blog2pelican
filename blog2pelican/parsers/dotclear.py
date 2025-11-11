@@ -5,6 +5,8 @@ import pelican.utils
 import phpserialize
 from pelican.settings import DEFAULT_CONFIG
 
+from blog2pelican.helpers.pelican_format import pelican_format_datetime
+
 from .base import BlogParser
 
 logger = logging.getLogger(__name__)
@@ -76,10 +78,10 @@ class DotclearParser(BlogParser):
             # blog_id = fields[1],
             user_id=fields[2],
             cat_ids=fields[3],
-            post_dt=fields[4],
+            post_dt=pelican_format_datetime(fields[4]),
             # post_tz = fields[5],
-            post_creadt=fields[6],
-            # post_upddt = fields[7],
+            post_creadt=pelican_format_datetime(fields[6]),
+            # post_upddt = pelican_format_datetime(fields[7]),
             # post_password = fields[8],
             # post_type = fields[9],
             post_format=fields[10],
@@ -102,9 +104,6 @@ class DotclearParser(BlogParser):
             # nb_trackback = fields[26],
             # redirect_url = fields[28][:-1],
         )
-
-        # remove seconds
-        postobj.post_creadt = ":".join(postobj.post_creadt.split(":")[0:2])
 
         return postobj
 
