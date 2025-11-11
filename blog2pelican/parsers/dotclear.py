@@ -137,7 +137,11 @@ class DotclearParser(BlogParser):
                 content = postobj.post_excerpt + postobj.post_content
             else:
                 content = postobj.post_excerpt_xhtml + postobj.post_content_xhtml
+
+                # Unescape the html
                 content = content.replace("\\n", "")
+                content = content.replace('\\', "")
+
                 postobj.post_format = "html"
 
             kind = "article"  # TODO: Recognise pages

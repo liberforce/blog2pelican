@@ -39,3 +39,22 @@ def test_shortest_post():
     )
 
     assert actual == expected
+
+def test_embedded_image():
+    parser = DotclearParser()
+    posts = parser.parse("tests/data/dotclear/standalone/posts/guadec-2007-the-offline-desktop.txt")
+    actual = PelicanPost(*next(posts))
+    expected = PelicanPost(
+        title="GUADEC 2007: The offline desktop",
+        content='<p><img alt="" src="/public/guadec/2007/offline-desktop.png" /></p>',
+        filename="guadec-2007-the-offline-desktop",
+        date="2007-07-23 23:43",
+        author="LM2153-GANDI",
+        categories=["Computers / Informatique"],
+        tags=["bande dessinée", "GUADEC"],
+        status="published",
+        kind="article",
+        in_markup="html",
+    )
+
+    assert actual == expected
