@@ -1,9 +1,12 @@
 import datetime
 import json
 import urllib.request as urllib_request
+from collections.abc import Generator
 
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import SafeDatetime, slugify
+
+from blog2pelican.entities.posts import PelicanPost
 
 from .base import BlogParser
 
@@ -22,7 +25,7 @@ class TumblrParser(BlogParser):
         posts = json.loads(handle.read().decode("utf-8"))
         return posts.get("response").get("posts")
 
-    def parse(self, api_key):
+    def parse(self, api_key) -> Generator[PelicanPost]:
         """Imports Tumblr posts (API v2)"""
         offset = 0
         posts = self._get_tumblr_posts(api_key, offset)
@@ -118,7 +121,7 @@ class TumblrParser(BlogParser):
                 kind = "article"
                 status = "published"  # TODO: Find a way for draft posts
 
-                yield (
+                yield PelicanPost(
                     title,
                     content,
                     slug,

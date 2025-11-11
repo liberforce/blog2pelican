@@ -1,9 +1,11 @@
 import logging
 import re
+from collections.abc import Generator
 from html import unescape
 
 from pelican.utils import SafeDatetime
 
+from blog2pelican.entities.posts import PelicanPost
 from blog2pelican.helpers.soup import soup_from_xml_file
 from blog2pelican.tool import get_filename
 
@@ -109,7 +111,7 @@ class WordPressParser(BlogParser):
 
         return content
 
-    def parse(self, xml):
+    def parse(self, xml) -> Generator[PelicanPost]:
         """Opens a wordpress XML file, and yield Pelican fields"""
 
         soup = soup_from_xml_file(xml)
@@ -167,7 +169,7 @@ class WordPressParser(BlogParser):
                         pass
                     else:
                         kind = post_type
-                yield (
+                yield PelicanPost(
                     title,
                     content,
                     filename,

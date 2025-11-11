@@ -6,6 +6,7 @@ import re
 import sys
 import tempfile
 from collections import defaultdict
+from collections.abc import Generator
 from typing import Any
 from urllib.error import URLError
 from urllib.parse import quote, urlparse, urlsplit, urlunsplit
@@ -266,7 +267,7 @@ def is_pandoc_needed(in_markup):
 
 
 def posts_to_pelican(
-    posts,
+    posts: Generator[PelicanPost],
     out_markup,
     output_path,
     dircat=False,
@@ -283,9 +284,7 @@ def posts_to_pelican(
 
     slug_subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
 
-    for post in posts:
-        ppost = PelicanPost(*post)
-
+    for ppost in posts:
         if filter_author and filter_author != ppost.author:
             continue
         if is_pandoc_needed(ppost.in_markup) and not pandoc.version:
@@ -476,7 +475,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def extract_posts(args: Any) -> tuple[Any]:
+def extract_posts(args: Any) -> Generator[PelicanPost]:
     blog_parser: BlogParser = create_blog_parser(args.origin, args)
     return blog_parser.parse(args.input)
 

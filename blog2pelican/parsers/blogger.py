@@ -1,14 +1,16 @@
 import os
+from collections.abc import Generator
 
 from pelican.utils import SafeDatetime
 
+from blog2pelican.entities.posts import PelicanPost
 from blog2pelican.helpers.soup import soup_from_xml_file
 
 from .base import BlogParser
 
 
 class BloggerParser(BlogParser):
-    def parse(self, path: str):
+    def parse(self, path: str) -> Generator[PelicanPost]:
         """Opens a blogger XML file, and yield Pelican fields"""
 
         soup = soup_from_xml_file(path)
@@ -62,7 +64,7 @@ class BloggerParser(BlogParser):
             except AttributeError:
                 pass
 
-            yield (
+            yield PelicanPost(
                 title,
                 content,
                 filename,

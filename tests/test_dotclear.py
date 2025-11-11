@@ -5,7 +5,7 @@ from blog2pelican.entities.posts import PelicanPost
 def test_simple():
     parser = DotclearParser()
     posts = parser.parse("tests/data/dotclear/standalone/posts/simple.txt")
-    actual = PelicanPost(*next(posts))
+    actual = next(posts)
     expected = PelicanPost(
         title="En direct d'Istanbul",
         content="<p>first paragraph</p>",
@@ -24,7 +24,7 @@ def test_simple():
 def test_shortest_post():
     parser = DotclearParser()
     posts = parser.parse("tests/data/dotclear/standalone/posts/favorite-command-after-a-clean-mandriva-install.txt")
-    actual = PelicanPost(*next(posts))
+    actual = next(posts)
     expected = PelicanPost(
         title="Favorite command after a clean Mandriva Install...",
         content="<pre>urpme -a mono</pre>",
@@ -43,7 +43,7 @@ def test_shortest_post():
 def test_embedded_image():
     parser = DotclearParser()
     posts = parser.parse("tests/data/dotclear/standalone/posts/guadec-2007-the-offline-desktop.txt")
-    actual = PelicanPost(*next(posts))
+    actual = next(posts)
     expected = PelicanPost(
         title="GUADEC 2007: The offline desktop",
         content='<p><img alt="" src="/public/guadec/2007/offline-desktop.png" /></p>',

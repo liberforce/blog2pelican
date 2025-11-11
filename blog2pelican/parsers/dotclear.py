@@ -1,10 +1,12 @@
 import logging
+from collections.abc import Generator
 from dataclasses import dataclass
 
 import pelican.utils
 import phpserialize
 from pelican.settings import DEFAULT_CONFIG
 
+from blog2pelican.entities.posts import PelicanPost
 from blog2pelican.helpers.pelican_format import pelican_format_datetime
 
 from .base import BlogParser
@@ -148,8 +150,8 @@ class DotclearParser(BlogParser):
         content = content.replace("\\", "")
         return content
 
-    def parse(self, path: str):
-        """Opens a Dotclear export file, and yield pelican fields"""
+    def parse(self, path: str) -> Generator[PelicanPost]:
+        """Parse a Dotclear export file, and yield posts"""
         category_list, posts = self._dotclear_parse_sections(path)
 
         print(f"{len(posts)} posts read.")
@@ -184,7 +186,7 @@ class DotclearParser(BlogParser):
             kind = "article"  # TODO: Recognise pages
             status = "published"  # TODO: Find a way for draft posts
 
-            yield (
+            yield PelicanPost(
                 postobj.post_title,
                 content,
                 pelican.utils.slugify(postobj.post_title, regex_subs=subs),
