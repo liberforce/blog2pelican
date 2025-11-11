@@ -3,7 +3,6 @@ import argparse
 import logging
 import os
 import re
-import subprocess
 import sys
 import tempfile
 from collections import defaultdict
@@ -20,6 +19,7 @@ from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
 
 from blog2pelican.entities.posts import PelicanPost
+from blog2pelican.helpers.pandoc import Pandoc
 from blog2pelican.helpers.soup import soup_from_xml_file
 from blog2pelican.parsers import create_blog_parser
 from blog2pelican.parsers.base import BlogParser
@@ -265,27 +265,6 @@ def is_pandoc_needed(in_markup):
     return in_markup in ("html", "wp-html")
 
 
-def get_pandoc_version():
-    cmd = ["pandoc", "--version"]
-    try:
-        output = subprocess.check_output(cmd, text=True)
-    except (subprocess.CalledProcessError, OSError) as e:
-        logger.warning("Pandoc version unknown: %s", e)
-        return ()
-
-    return tuple(int(i) for i in output.split()[1].split("."))
-
-
-def update_links_to_attached_files(content, attachments):
-    for old_url, new_path in attachments.items():
-        # url may occur both with http:// and https://
-        http_url = old_url.replace("https://", "http://")
-        https_url = old_url.replace("http://", "https://")
-        for url in [http_url, https_url]:
-            content = content.replace(url, "{static}" + new_path)
-    return content
-
-
 def posts_to_pelican(
     posts,
     out_markup,
@@ -299,7 +278,7 @@ def posts_to_pelican(
     wp_attach=False,
     attachments=None,
 ):
-    pandoc_version = get_pandoc_version()
+    pandoc = Pandoc()
     posts_require_pandoc = []
 
     slug_subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
@@ -309,7 +288,7 @@ def posts_to_pelican(
 
         if filter_author and filter_author != ppost.author:
             continue
-        if is_pandoc_needed(ppost.in_markup) and not pandoc_version:
+        if is_pandoc_needed(ppost.in_markup) and not pandoc.version:
             posts_require_pandoc.append(ppost.filename)
 
         slug = (not disable_slugs and ppost.filename) or None
@@ -377,71 +356,21 @@ def posts_to_pelican(
 
         if ppost.in_markup in ("html", "wp-html"):
             with tempfile.TemporaryDirectory() as tmpdir:
-                html_filename = os.path.join(tmpdir, "pandoc-input.html")
-                # Replace newlines with paragraphs wrapped with <p> so
-                # HTML is valid before conversion
-                if ppost.in_markup == "wp-html":
-                    from blog2pelican.parsers.wordpress import decode_wp_content
-
-                    new_content = decode_wp_content(ppost.content)
-                else:
-                    paragraphs = ppost.content.splitlines()
-                    paragraphs = [f"<p>{p}</p>" for p in paragraphs]
-                    new_content = "".join(paragraphs)
-                with open(html_filename, "w", encoding="utf-8") as fp:
-                    fp.write(new_content)
-
-                if pandoc_version < (2,):
-                    parse_raw = "--parse-raw" if not strip_raw else ""
-                    wrap_none = (
-                        "--wrap=none" if pandoc_version >= (1, 16) else "--no-wrap"
-                    )
-                    cmd = (
-                        'pandoc --normalize {0} --from=html --to={1} {2} -o "{3}" "{4}"'
-                    )
-                    cmd = cmd.format(
-                        parse_raw,
-                        out_markup if out_markup != "markdown" else "gfm",
-                        wrap_none,
-                        out_filename,
-                        html_filename,
-                    )
-                else:
-                    from_arg = "-f html+raw_html" if not strip_raw else "-f html"
-                    cmd = 'pandoc {0} --to={1}-smart --wrap=none -o "{2}" "{3}"'
-                    cmd = cmd.format(
-                        from_arg,
-                        out_markup if out_markup != "markdown" else "gfm",
-                        out_filename,
-                        html_filename,
-                    )
-
-                try:
-                    rc = subprocess.call(cmd, shell=True)
-                    if rc < 0:
-                        error = f"Child was terminated by signal {-rc}"
-                        sys.exit(error)
-
-                    elif rc > 0:
-                        error = "Please, check your Pandoc installation."
-                        sys.exit(error)
-                except OSError as e:
-                    error = f"Pandoc execution failed: {e}"
-                    sys.exit(error)
-
-            with open(out_filename, encoding="utf-8") as fs:
-                content = fs.read()
-                if out_markup == "markdown":
-                    # In markdown, to insert a <br />, end a line with two
-                    # or more spaces & then a end-of-line
-                    content = content.replace("\\\n ", "  \n")
-                    content = content.replace("\\\n", "  \n")
-
-            if wp_attach and links:
-                content = update_links_to_attached_files(content, links)
+                ppost.content = pandoc.adapt(
+                    ppost.in_markup,
+                    out_markup,
+                    tmpdir,  # output_path,
+                    ppost.filename,
+                    ppost.content,
+                    strip_raw,
+                    wp_attach,
+                    links,
+                    out_filename,
+                )
+                ppost.in_markup = out_markup
 
         with open(out_filename, "w", encoding="utf-8") as fs:
-            fs.write(header + content)
+            fs.write(header + ppost.content)
 
     if posts_require_pandoc:
         logger.error(
