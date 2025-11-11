@@ -20,3 +20,22 @@ def test_simple():
     )
 
     assert actual == expected
+
+def test_shortest_post():
+    parser = DotclearParser()
+    posts = parser.parse("tests/data/dotclear/standalone/posts/favorite-command-after-a-clean-mandriva-install.txt")
+    actual = PelicanPost(*next(posts))
+    expected = PelicanPost(
+        title="Favorite command after a clean Mandriva Install...",
+        content="<pre>urpme -a mono</pre>",
+        filename="favorite-command-after-a-clean-mandriva-install",
+        date="2008-03-26 00:48",
+        author="LM-2153-GANDI",
+        categories=["Computers / Informatique"],
+        tags=["mandriva"],
+        status="published",
+        kind="article",
+        in_markup="html",
+    )
+
+    assert actual == expected
