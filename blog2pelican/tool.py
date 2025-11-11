@@ -285,8 +285,8 @@ def update_links_to_attached_files(content, attachments):
     return content
 
 
-def fields2pelican(
-    fields,
+def posts_to_pelican(
+    posts,
     out_markup,
     output_path,
     dircat=False,
@@ -303,18 +303,19 @@ def fields2pelican(
 
     slug_subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
 
-    for (
-        title,
-        content,
-        filename,
-        date,
-        author,
-        categories,
-        tags,
-        status,
-        kind,
-        in_markup,
-    ) in fields:
+    for post in posts:
+        (
+            title,
+            content,
+            filename,
+            date,
+            author,
+            categories,
+            tags,
+            status,
+            kind,
+            in_markup,
+        ) = post
         if filter_author and filter_author != author:
             continue
         if is_pandoc_needed(in_markup) and not pandoc_version:
@@ -555,7 +556,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def extract_fields(args: Any) -> tuple[Any]:
+def extract_posts(args: Any) -> tuple[Any]:
     blog_parser: BlogParser = create_blog_parser(args.origin, args)
     return blog_parser.parse(args.input)
 
@@ -572,7 +573,7 @@ def create_output_dir_if_required(dirname: str):
 def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
-    fields = extract_fields(args)
+    posts = extract_posts(args)
     create_output_dir_if_required(args.output)
 
     if args.wp_attach and args.origin != "wordpress":
@@ -586,8 +587,8 @@ def main():
 
     # init logging
     init()
-    fields2pelican(
-        fields,
+    posts_to_pelican(
+        posts,
         args.markup,
         args.output,
         dircat=args.dircat or False,
