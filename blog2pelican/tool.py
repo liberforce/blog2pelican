@@ -19,6 +19,7 @@ from pelican.log import init
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
 
+from blog2pelican.entities.posts import PelicanPost
 from blog2pelican.helpers.soup import soup_from_xml_file
 from blog2pelican.parsers import create_blog_parser
 from blog2pelican.parsers.base import BlogParser
@@ -304,97 +305,87 @@ def posts_to_pelican(
     slug_subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
 
     for post in posts:
-        (
-            title,
-            content,
-            filename,
-            date,
-            author,
-            categories,
-            tags,
-            status,
-            kind,
-            in_markup,
-        ) = post
-        if filter_author and filter_author != author:
-            continue
-        if is_pandoc_needed(in_markup) and not pandoc_version:
-            posts_require_pandoc.append(filename)
+        ppost = PelicanPost(*post)
 
-        slug = (not disable_slugs and filename) or None
-        assert slug is None or filename == os.path.basename(
-            filename
-        ), f"filename is not a basename: {filename}"
+        if filter_author and filter_author != ppost.author:
+            continue
+        if is_pandoc_needed(ppost.in_markup) and not pandoc_version:
+            posts_require_pandoc.append(ppost.filename)
+
+        slug = (not disable_slugs and ppost.filename) or None
+        assert slug is None or ppost.filename == os.path.basename(
+            ppost.filename
+        ), f"filename is not a basename: {ppost.filename}"
 
         if wp_attach and attachments:
             try:
-                urls = attachments[filename]
+                urls = attachments[ppost.filename]
                 links = download_attachments(output_path, urls)
             except KeyError:
                 links = None
         else:
             links = None
 
-        ext = get_ext(out_markup, in_markup)
+        ext = get_ext(out_markup, ppost.in_markup)
         if ext == ".adoc":
             header = build_asciidoc_header(
-                title,
-                date,
-                author,
-                categories,
-                tags,
+                ppost.title,
+                ppost.date,
+                ppost.author,
+                ppost.categories,
+                ppost.tags,
                 slug,
-                status,
+                ppost.status,
                 attachments,
             )
         elif ext == ".md":
             header = build_markdown_header(
-                title,
-                date,
-                author,
-                categories,
-                tags,
+                ppost.title,
+                ppost.date,
+                ppost.author,
+                ppost.categories,
+                ppost.tags,
                 slug,
-                status,
+                ppost.status,
                 links.values() if links else None,
             )
         else:
             out_markup = "rst"
             header = build_header(
-                title,
-                date,
-                author,
-                categories,
-                tags,
+                ppost.title,
+                ppost.date,
+                ppost.author,
+                ppost.categories,
+                ppost.tags,
                 slug,
-                status,
+                ppost.status,
                 links.values() if links else None,
             )
 
         out_filename = get_out_filename(
             output_path,
-            filename,
+            ppost.filename,
             ext,
-            kind,
+            ppost.kind,
             dirpage,
             dircat,
-            categories,
+            ppost.categories,
             wp_custpost,
             slug_subs,
         )
         print(out_filename)
 
-        if in_markup in ("html", "wp-html"):
+        if ppost.in_markup in ("html", "wp-html"):
             with tempfile.TemporaryDirectory() as tmpdir:
                 html_filename = os.path.join(tmpdir, "pandoc-input.html")
                 # Replace newlines with paragraphs wrapped with <p> so
                 # HTML is valid before conversion
-                if in_markup == "wp-html":
+                if ppost.in_markup == "wp-html":
                     from blog2pelican.parsers.wordpress import decode_wp_content
 
-                    new_content = decode_wp_content(content)
+                    new_content = decode_wp_content(ppost.content)
                 else:
-                    paragraphs = content.splitlines()
+                    paragraphs = ppost.content.splitlines()
                     paragraphs = [f"<p>{p}</p>" for p in paragraphs]
                     new_content = "".join(paragraphs)
                 with open(html_filename, "w", encoding="utf-8") as fp:
