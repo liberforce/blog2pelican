@@ -78,7 +78,8 @@ class DotclearParser(BlogParser):
             # blog_id = fields[1],
             user_id=fields[2],
             cat_ids=fields[3],
-            post_dt=pelican_format_datetime(fields[4]),
+            # post_dt
+            publication_date=pelican_format_datetime(fields[4]),
             # post_tz = fields[5],
             post_creadt=pelican_format_datetime(fields[6]),
             # post_upddt = pelican_format_datetime(fields[7]),
@@ -146,7 +147,7 @@ class DotclearParser(BlogParser):
                 postobj.title,
                 content,
                 pelican.utils.slugify(postobj.title, regex_subs=subs),
-                postobj.post_creadt,
+                postobj.publication_date,
                 author,
                 categories,
                 tags,
@@ -160,7 +161,7 @@ class DotclearParser(BlogParser):
 class DotclearPost:
     user_id: str
     cat_ids: list[str]
-    post_dt: str
+    publication_date: str
     post_creadt: str
     post_format: str
     title: str

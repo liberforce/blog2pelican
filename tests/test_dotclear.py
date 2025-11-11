@@ -10,7 +10,7 @@ def test_simple():
         title="En direct d'Istanbul",
         content="<p>first paragraph</p>",
         filename="en-direct-distanbul",
-        date="2008-07-07 08:08",
+        date="2008-07-07 11:07",
         author="TEST-GANDI",
         categories=["Life"],
         tags=["GUADEC", "GNOME"],
