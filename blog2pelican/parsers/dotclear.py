@@ -107,9 +107,9 @@ class DotclearParser(BlogParser):
 
         return category_list, posts
 
-    def _dotclear_parse_post(self, post) -> DotclearPost:
-        fields = post.strip('"').split('","')
-        postobj = DotclearPost(
+    def _parse_raw_post(self, raw_post) -> DotclearPost:
+        fields = raw_post.strip('"').split('","')
+        dc_post = DotclearPost(
             # post_id = fields[0][1:],
             # blog_id = fields[1],
             user_id=fields[2],
@@ -142,7 +142,7 @@ class DotclearParser(BlogParser):
             # redirect_url = fields[28][:-1],
         )
 
-        return postobj
+        return dc_post
 
     def _adapt_content(self, content: str) -> str:
         # Unescape backquoted characters
@@ -152,22 +152,22 @@ class DotclearParser(BlogParser):
 
     def parse(self, path: str) -> Generator[PelicanPost]:
         """Parse a Dotclear export file, and yield posts"""
-        category_list, posts = self._dotclear_parse_sections(path)
+        category_list, raw_posts = self._dotclear_parse_sections(path)
 
-        print(f"{len(posts)} posts read.")
+        print(f"{len(raw_posts)} posts read.")
 
         subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
-        for post in posts:
-            postobj = self._dotclear_parse_post(post)
+        for raw_post in raw_posts:
+            dc_post = self._parse_raw_post(raw_post)
 
-            author = postobj.user_id
+            author = dc_post.user_id
             categories = []
-            tags = self._get_tags(postobj.post_meta, postobj.post_title)
+            tags = self._get_tags(dc_post.post_meta, dc_post.post_title)
 
-            if postobj.cat_ids:
+            if dc_post.cat_ids:
                 categories = [
                     category_list[cat_id].strip()
-                    for cat_id in postobj.cat_ids.split(",")
+                    for cat_id in dc_post.cat_ids.split(",")
                 ]
 
             """
@@ -175,26 +175,26 @@ class DotclearParser(BlogParser):
             you use the markdown plugin
             Ref: http://plugins.dotaddict.org/dc2/details/formatting-markdown
             """
-            if postobj.post_format == "markdown":
-                content = postobj.post_excerpt + postobj.post_content
+            if dc_post.post_format == "markdown":
+                content = dc_post.post_excerpt + dc_post.post_content
             else:
-                content = postobj.post_excerpt_xhtml + postobj.post_content_xhtml
+                content = dc_post.post_excerpt_xhtml + dc_post.post_content_xhtml
                 content = self._adapt_content(content)
 
-                postobj.post_format = "html"
+                dc_post.post_format = "html"
 
             kind = "article"  # TODO: Recognise pages
             status = "published"  # TODO: Find a way for draft posts
 
             yield PelicanPost(
-                postobj.post_title,
+                dc_post.post_title,
                 content,
-                pelican.utils.slugify(postobj.post_title, regex_subs=subs),
-                postobj.post_dt,
+                pelican.utils.slugify(dc_post.post_title, regex_subs=subs),
+                dc_post.post_dt,
                 author,
                 categories,
                 tags,
                 status,
                 kind,
-                postobj.post_format,
+                dc_post.post_format,
             )
