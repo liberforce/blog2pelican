@@ -126,7 +126,7 @@ class Pandoc:
 
         return content
 
-    def update_links_to_attached_files(content, attachments):
+    def update_links_to_attached_files(self, content, attachments):
         for old_url, new_path in attachments.items():
             # url may occur both with http:// and https://
             http_url = old_url.replace("https://", "http://")
