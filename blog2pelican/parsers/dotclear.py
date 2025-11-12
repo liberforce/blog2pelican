@@ -152,7 +152,7 @@ class DotclearParser(BlogParser):
 
     def parse(self, path: str) -> Generator[PelicanPost]:
         """Parse a Dotclear export file, and yield posts"""
-        category_list, raw_posts = self._parse_sections(path)
+        categories_dict, raw_posts = self._parse_sections(path)
 
         print(f"{len(raw_posts)} posts read.")
 
@@ -161,14 +161,12 @@ class DotclearParser(BlogParser):
             dc_post = self._parse_raw_post(raw_post)
 
             author = dc_post.user_id
-            categories = []
             tags = self._get_tags(dc_post.post_meta, dc_post.post_title)
-
-            if dc_post.cat_ids:
-                categories = [
-                    category_list[cat_id].strip()
-                    for cat_id in dc_post.cat_ids.split(",")
-                ]
+            categories = [
+                categories_dict[cat_id].strip()
+                for cat_id in dc_post.cat_ids.split(",")
+                if dc_post.cat_ids
+            ]
 
             """
             dotclear2 does not use markdown by default unless
