@@ -77,7 +77,7 @@ class DotclearParser(BlogParser):
         tags = [tag.decode("utf-8") for tag in tags_dict[b"tag"].values()]
         return tags
 
-    def _dotclear_parse_sections(self, file: str):
+    def _parse_sections(self, file: str):
         in_cat = False
         in_post = False
         category_list = {}
@@ -152,7 +152,7 @@ class DotclearParser(BlogParser):
 
     def parse(self, path: str) -> Generator[PelicanPost]:
         """Parse a Dotclear export file, and yield posts"""
-        category_list, raw_posts = self._dotclear_parse_sections(path)
+        category_list, raw_posts = self._parse_sections(path)
 
         print(f"{len(raw_posts)} posts read.")
 
