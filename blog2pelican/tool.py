@@ -490,12 +490,13 @@ def create_output_dir_if_required(dirname: str):
 def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
-    posts = extract_posts(args)
-    create_output_dir_if_required(args.output)
 
     if args.wp_attach and args.origin != "wordpress":
         error = "You must be importing a wordpress xml to use the --wp-attach option"
         sys.exit(error)
+
+    posts = extract_posts(args)
+    create_output_dir_if_required(args.output)
 
     if args.wp_attach:
         attachments = get_attachments(args.input)
