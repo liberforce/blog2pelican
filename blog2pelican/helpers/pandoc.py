@@ -43,7 +43,7 @@ class Pandoc:
     def supports(self, input_format):
         return input_format in ("html", "wp-html")
 
-    def adapt(
+    def convert(
         self,
         in_markup,
         out_markup,
@@ -55,6 +55,9 @@ class Pandoc:
         links,
         out_filename,
     ):
+        """
+        Convert text from one markup language to another.
+        """
         if not self.supports(in_markup):
             return content
 
