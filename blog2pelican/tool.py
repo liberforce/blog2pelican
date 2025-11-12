@@ -284,92 +284,92 @@ def posts_to_pelican(
 
     slug_subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
 
-    for ppost in posts:
-        if filter_author and filter_author != ppost.author:
+    for post in posts:
+        if filter_author and filter_author != post.author:
             continue
-        if is_pandoc_needed(ppost.markup) and not pandoc.version:
-            posts_require_pandoc.append(ppost.filename)
+        if is_pandoc_needed(post.markup) and not pandoc.version:
+            posts_require_pandoc.append(post.filename)
 
-        slug = (not disable_slugs and ppost.filename) or None
-        assert slug is None or ppost.filename == os.path.basename(
-            ppost.filename
-        ), f"filename is not a basename: {ppost.filename}"
+        slug = (not disable_slugs and post.filename) or None
+        assert slug is None or post.filename == os.path.basename(
+            post.filename
+        ), f"filename is not a basename: {post.filename}"
 
         if wp_attach and attachments:
             try:
-                urls = attachments[ppost.filename]
+                urls = attachments[post.filename]
                 links = download_attachments(output_path, urls)
             except KeyError:
                 links = None
         else:
             links = None
 
-        ext = get_ext(out_markup, ppost.markup)
+        ext = get_ext(out_markup, post.markup)
         if ext == ".adoc":
             header = build_asciidoc_header(
-                ppost.title,
-                ppost.date,
-                ppost.author,
-                ppost.categories,
-                ppost.tags,
+                post.title,
+                post.date,
+                post.author,
+                post.categories,
+                post.tags,
                 slug,
-                ppost.status,
+                post.status,
                 attachments,
             )
         elif ext == ".md":
             header = build_markdown_header(
-                ppost.title,
-                ppost.date,
-                ppost.author,
-                ppost.categories,
-                ppost.tags,
+                post.title,
+                post.date,
+                post.author,
+                post.categories,
+                post.tags,
                 slug,
-                ppost.status,
+                post.status,
                 links.values() if links else None,
             )
         else:
             out_markup = "rst"
             header = build_header(
-                ppost.title,
-                ppost.date,
-                ppost.author,
-                ppost.categories,
-                ppost.tags,
+                post.title,
+                post.date,
+                post.author,
+                post.categories,
+                post.tags,
                 slug,
-                ppost.status,
+                post.status,
                 links.values() if links else None,
             )
 
         out_filename = get_out_filename(
             output_path,
-            ppost.filename,
+            post.filename,
             ext,
-            ppost.kind,
+            post.kind,
             dirpage,
             dircat,
-            ppost.categories,
+            post.categories,
             wp_custpost,
             slug_subs,
         )
         print(out_filename)
 
-        if ppost.markup in ("html", "wp-html"):
+        if post.markup in ("html", "wp-html"):
             with tempfile.TemporaryDirectory() as tmpdir:
-                ppost.content = pandoc.convert(
-                    ppost.markup,
+                post.content = pandoc.convert(
+                    post.markup,
                     out_markup,
                     tmpdir,  # output_path,
-                    ppost.filename,
-                    ppost.content,
+                    post.filename,
+                    post.content,
                     strip_raw,
                     wp_attach,
                     links,
                     out_filename,
                 )
-                ppost.markup = out_markup
+                post.markup = out_markup
 
         with open(out_filename, "w", encoding="utf-8") as fs:
-            fs.write(header + ppost.content)
+            fs.write(header + post.content)
 
     if posts_require_pandoc:
         logger.error(
