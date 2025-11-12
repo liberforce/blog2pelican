@@ -18,7 +18,8 @@ class WordPressParser(BlogParser):
     def __init__(self, custpost: bool = False):
         self.custpost = custpost
 
-    def decode_wp_content(sefl, content, br=True):
+    @staticmethod
+    def decode_wp_content(content, br=True):
         pre_tags = {}
         if content is None or content.strip() == "":
             return ""

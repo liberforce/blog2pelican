@@ -5,8 +5,6 @@ import sys
 
 from blog2pelican.entities.posts import PelicanPost
 
-# from blog2pelican.parsers.wordpress import decode_wp_content
-
 logger = logging.getLogger(__name__)
 
 
@@ -68,9 +66,9 @@ class Pandoc:
             # Replace newlines with paragraphs wrapped with <p> so
             # HTML is valid before conversion
             if post.markup == "wp-html":
-                from blog2pelican.parsers.wordpress import decode_wp_content
+                from blog2pelican.parsers.wordpress import WordPressParser
 
-                new_content = decode_wp_content(content)
+                new_content = WordPressParser.decode_wp_content(content)
             else:
                 paragraphs = content.splitlines()
                 paragraphs = [f"<p>{p}</p>" for p in paragraphs]
