@@ -287,7 +287,7 @@ def posts_to_pelican(
     for ppost in posts:
         if filter_author and filter_author != ppost.author:
             continue
-        if is_pandoc_needed(ppost.in_markup) and not pandoc.version:
+        if is_pandoc_needed(ppost.markup) and not pandoc.version:
             posts_require_pandoc.append(ppost.filename)
 
         slug = (not disable_slugs and ppost.filename) or None
@@ -304,7 +304,7 @@ def posts_to_pelican(
         else:
             links = None
 
-        ext = get_ext(out_markup, ppost.in_markup)
+        ext = get_ext(out_markup, ppost.markup)
         if ext == ".adoc":
             header = build_asciidoc_header(
                 ppost.title,
@@ -353,10 +353,10 @@ def posts_to_pelican(
         )
         print(out_filename)
 
-        if ppost.in_markup in ("html", "wp-html"):
+        if ppost.markup in ("html", "wp-html"):
             with tempfile.TemporaryDirectory() as tmpdir:
                 ppost.content = pandoc.convert(
-                    ppost.in_markup,
+                    ppost.markup,
                     out_markup,
                     tmpdir,  # output_path,
                     ppost.filename,
@@ -366,7 +366,7 @@ def posts_to_pelican(
                     links,
                     out_filename,
                 )
-                ppost.in_markup = out_markup
+                ppost.markup = out_markup
 
         with open(out_filename, "w", encoding="utf-8") as fs:
             fs.write(header + ppost.content)

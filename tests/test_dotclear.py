@@ -16,7 +16,7 @@ def test_simple():
         tags=["GUADEC", "GNOME"],
         status="published",
         kind="article",
-        in_markup="html",
+        markup="html",
     )
 
     assert actual == expected
@@ -35,7 +35,7 @@ def test_shortest_post():
         tags=["mandriva"],
         status="published",
         kind="article",
-        in_markup="html",
+        markup="html",
     )
 
     assert actual == expected
@@ -54,7 +54,7 @@ def test_embedded_image():
         tags=["bande dessinée", "GUADEC"],
         status="published",
         kind="article",
-        in_markup="html",
+        markup="html",
     )
 
     assert actual == expected

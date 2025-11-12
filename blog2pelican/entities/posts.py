@@ -12,4 +12,4 @@ class PelicanPost:
     tags: list[str]
     status: str
     kind: str
-    in_markup: str
+    markup: str
