@@ -356,11 +356,9 @@ def posts_to_pelican(
         if post.markup in ("html", "wp-html"):
             with tempfile.TemporaryDirectory() as tmpdir:
                 post.content = pandoc.convert(
-                    post.markup,
+                    post,
                     out_markup,
                     tmpdir,  # output_path,
-                    post.filename,
-                    post.content,
                     strip_raw,
                     wp_attach,
                     links,

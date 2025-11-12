@@ -3,6 +3,8 @@ import os.path
 import subprocess
 import sys
 
+from blog2pelican.entities.posts import PelicanPost
+
 # from blog2pelican.parsers.wordpress import decode_wp_content
 
 logger = logging.getLogger(__name__)
@@ -45,11 +47,9 @@ class Pandoc:
 
     def convert(
         self,
-        in_markup,
+        post: PelicanPost,
         out_markup,
         output_path,
-        filename,
-        content,
         strip_raw,
         wp_attach,
         links,
@@ -58,15 +58,16 @@ class Pandoc:
         """
         Convert text from one markup language to another.
         """
-        if not self.supports(in_markup):
-            return content
+        if not self.supports(post.markup):
+            return
 
-        html_filename = os.path.join(output_path, filename + ".html")
+        html_filename = os.path.join(output_path, post.filename + ".html")
+        content = post.content
 
         with open(html_filename, "w", encoding="utf-8") as fp:
             # Replace newlines with paragraphs wrapped with <p> so
             # HTML is valid before conversion
-            if in_markup == "wp-html":
+            if post.markup == "wp-html":
                 from blog2pelican.parsers.wordpress import decode_wp_content
 
                 new_content = decode_wp_content(content)
