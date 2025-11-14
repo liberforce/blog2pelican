@@ -19,6 +19,7 @@ from pelican.log import init
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
 
+from blog2pelican.entities.import_settings import create_import_settings
 from blog2pelican.entities.posts import PelicanPost
 from blog2pelican.helpers.pandoc import Pandoc
 from blog2pelican.helpers.soup import soup_from_xml_file
@@ -493,6 +494,7 @@ def create_output_dir_if_required(dirname: str):
 def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
+    import_settings = create_import_settings(args.origin, args)
 
     if args.wp_attach and args.origin != "wordpress":
         error = "You must be importing a wordpress xml to use the --wp-attach option"
