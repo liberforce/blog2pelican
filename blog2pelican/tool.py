@@ -501,10 +501,7 @@ def main():
     posts = extract_posts(args)
     create_output_dir_if_required(args.output)
 
-    if args.wp_attach:
-        attachments = get_attachments(args.input)
-    else:
-        attachments = None
+    attachments = get_attachments(args.input) if args.wp_attach else None
 
     # init logging
     init()
