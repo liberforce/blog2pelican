@@ -468,7 +468,10 @@ def build_argument_parser() -> argparse.ArgumentParser:
         "with your original posts.",
     )
     parser.add_argument(
-        "-b", "--blogname", dest="blogname", help="Blog name (Tumblr import only)"
+        "-b",
+        "--blogname",
+        dest="blogname",
+        help="Blog name (Tumblr import only)",
     )
     return parser
 
