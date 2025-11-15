@@ -29,3 +29,6 @@ class ImportSettings:
 
     """Put files in directories with categories name"""
     dircat: bool
+
+    def check(self):
+        """Check if the settings are consistent for the selected origin"""

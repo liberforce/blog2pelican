@@ -495,10 +495,7 @@ def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
     import_settings = create_import_settings(args.origin, args)
-
-    if args.wp_attach and args.origin != "wordpress":
-        error = "You must be importing a wordpress xml to use the --wp-attach option"
-        sys.exit(error)
+    import_settings.check()
 
     posts = extract_posts(args)
     create_output_dir_if_required(args.output)
