@@ -267,31 +267,22 @@ def is_pandoc_needed(in_markup):
     return in_markup in ("html", "wp-html")
 
 
-def posts_to_pelican(
-    posts: Generator[PelicanPost],
-    settings: ImportSettings,
-    output_path,
-    dircat=False,
-    strip_raw=False,
-    disable_slugs=False,
-    dirpage=False,
-    filter_author=None,
-    wp_custpost=False,
-    wp_attach=False,
-    attachments=None,
-):
-    pandoc = Pandoc()
-    posts_require_pandoc = []
-
-    slug_subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
-
-    for post in posts:
-        if filter_author and filter_author != post.author:
-            continue
-
-        if is_pandoc_needed(post.markup) and not pandoc.version:
-            posts_require_pandoc.append(post.filename)
-
+class PostConverter:
+    def convert(
+        self,
+        post: PelicanPost,
+        settings: ImportSettings,
+        output_path,
+        dircat=False,
+        strip_raw=False,
+        disable_slugs=False,
+        dirpage=False,
+        filter_author=None,
+        wp_custpost=False,
+        wp_attach=False,
+        attachments=None,
+    ):
+        pandoc = Pandoc()
         slug = (not disable_slugs and post.filename) or None
         assert slug is None or post.filename == os.path.basename(
             post.filename
@@ -315,10 +306,10 @@ def posts_to_pelican(
             output_path,
             dirpage,
             wp_custpost,
-            slug_subs,
         )
         print(out_filename)
 
+        # Convert content
         if post.markup in ("html", "wp-html"):
             with tempfile.TemporaryDirectory() as tmpdir:
                 post.content = pandoc.convert(
@@ -335,12 +326,45 @@ def posts_to_pelican(
         with open(out_filename, "w", encoding="utf-8") as fs:
             fs.write(header + post.content)
 
-    if posts_require_pandoc:
-        logger.error(
-            "Pandoc must be installed to import the following posts:\n  {}".format(
-                "\n  ".join(posts_require_pandoc)
-            )
-        )
+
+class MissingPandocError(Exception):
+    pass
+
+
+def post_to_pelican(
+    post: PelicanPost,
+    settings: ImportSettings,
+    output_path,
+    dircat=False,
+    strip_raw=False,
+    disable_slugs=False,
+    dirpage=False,
+    filter_author=None,
+    wp_custpost=False,
+    wp_attach=False,
+    attachments=None,
+):
+    if filter_author and filter_author != post.author:
+        return
+
+    pandoc = Pandoc()
+    if is_pandoc_needed(post.markup) and not pandoc.version:
+        raise MissingPandocError
+
+    pc = PostConverter()
+    pc.convert(
+        post,
+        settings,
+        output_path,
+        dircat,
+        strip_raw,
+        disable_slugs,
+        dirpage,
+        filter_author,
+        wp_custpost,
+        wp_attach,
+        attachments,
+    )
 
     if wp_attach and attachments and None in attachments:
         print("downloading attachments that don't have a parent post")
@@ -357,8 +381,8 @@ def get_output_data(
     output_path,
     dirpage,
     wp_custpost,
-    slug_subs,
 ):
+    slug_subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
     out_markup = settings.markup
     ext = get_ext(settings.markup, post.markup)
 
@@ -531,19 +555,32 @@ def main():
 
     # init logging
     init()
-    posts_to_pelican(
-        posts,
-        import_settings,
-        args.output,
-        dircat=args.dircat or False,
-        dirpage=args.dirpage or False,
-        strip_raw=args.strip_raw or False,
-        disable_slugs=args.disable_slugs or False,
-        filter_author=args.author,
-        wp_custpost=args.wp_custpost or False,
-        wp_attach=args.wp_attach or False,
-        attachments=attachments or None,
-    )
+    posts_require_pandoc = []
+
+    for post in posts:
+        try:
+            post_to_pelican(
+                post,
+                import_settings,
+                args.output,
+                dircat=args.dircat or False,
+                dirpage=args.dirpage or False,
+                strip_raw=args.strip_raw or False,
+                disable_slugs=args.disable_slugs or False,
+                filter_author=args.author,
+                wp_custpost=args.wp_custpost or False,
+                wp_attach=args.wp_attach or False,
+                attachments=attachments or None,
+            )
+        except MissingPandocError:
+            posts_require_pandoc.append(post.filename)
+
+    if posts_require_pandoc:
+        logger.error(
+            "Pandoc must be installed to import the following posts:\n  {}".format(
+                "\n  ".join(posts_require_pandoc)
+            )
+        )
 
 
 if __name__ == "__main__":
