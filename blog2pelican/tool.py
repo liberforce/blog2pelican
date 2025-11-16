@@ -528,11 +528,6 @@ def build_argument_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def extract_posts(args: Any) -> Generator[PelicanPost]:
-    blog_parser: BlogParser = create_blog_parser(args.origin, args)
-    return blog_parser.parse(args.input)
-
-
 def create_output_dir_if_required(dirname: str):
     if not os.path.exists(dirname):
         try:
@@ -542,13 +537,20 @@ def create_output_dir_if_required(dirname: str):
             sys.exit(error)
 
 
+class BlogConverter:
+    def extract_posts(self, args: Any) -> Generator[PelicanPost]:
+        blog_parser: BlogParser = create_blog_parser(args.origin, args)
+        return blog_parser.parse(args.input)
+
+
 def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
     import_settings = create_import_settings(args.origin, args)
     import_settings.check()
 
-    posts = extract_posts(args)
+    bc = BlogConverter()
+    posts = bc.extract_posts(args)
     create_output_dir_if_required(args.output)
 
     attachments = get_attachments(args.input) if args.wp_attach else None
