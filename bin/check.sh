@@ -7,6 +7,6 @@ toplevel_dir=$(realpath "${this_script_dir}/..")
 
 project="blog2pelican"
 mypy "${toplevel_dir}/${project}"
-ruff check "${toplevel_dir}/${project}"
+ruff check --output-format=concise "${toplevel_dir}/${project}"
 isort "${toplevel_dir}/${project}"
 black "${toplevel_dir}/${project}"
