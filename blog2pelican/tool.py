@@ -329,47 +329,6 @@ class MissingPandocError(Exception):
     pass
 
 
-def post_to_pelican(
-    post: PelicanPost,
-    settings: ImportSettings,
-    output_path,
-    dircat=False,
-    strip_raw=False,
-    disable_slugs=False,
-    dirpage=False,
-    filter_author=None,
-    wp_custpost=False,
-    wp_attach=False,
-    attachments=None,
-):
-    if filter_author and filter_author != post.author:
-        return
-
-    pandoc = Pandoc()
-    if is_pandoc_needed(post.markup) and not pandoc.version:
-        raise MissingPandocError
-
-    pc = PostConverter()
-    pc.convert(
-        post,
-        settings,
-        output_path,
-        dircat,
-        strip_raw,
-        disable_slugs,
-        dirpage,
-        filter_author,
-        wp_custpost,
-        wp_attach,
-        attachments,
-    )
-
-    if wp_attach and attachments and None in attachments:
-        print("downloading attachments that don't have a parent post")
-        urls = attachments[None]
-        download_attachments(output_path, urls)
-
-
 def get_output_data(
     settings: ImportSettings,
     post: PelicanPost,
@@ -544,6 +503,47 @@ class BlogConverter:
         blog_parser.use_settings(settings)
         return blog_parser.parse(settings.input)
 
+    def convert_post(
+        self,
+        post: PelicanPost,
+        settings: ImportSettings,
+        output_path,
+        dircat=False,
+        strip_raw=False,
+        disable_slugs=False,
+        dirpage=False,
+        filter_author=None,
+        wp_custpost=False,
+        wp_attach=False,
+        attachments=None,
+    ):
+        if filter_author and filter_author != post.author:
+            return
+
+        pandoc = Pandoc()
+        if is_pandoc_needed(post.markup) and not pandoc.version:
+            raise MissingPandocError
+
+        pc = PostConverter()
+        pc.convert(
+            post,
+            settings,
+            output_path,
+            dircat,
+            strip_raw,
+            disable_slugs,
+            dirpage,
+            filter_author,
+            wp_custpost,
+            wp_attach,
+            attachments,
+        )
+
+        if wp_attach and attachments and None in attachments:
+            print("downloading attachments that don't have a parent post")
+            urls = attachments[None]
+            download_attachments(output_path, urls)
+
 
 def main():
     argument_parser = build_argument_parser()
@@ -564,7 +564,7 @@ def main():
 
     for post in posts:
         try:
-            post_to_pelican(
+            bc.convert_post(
                 post,
                 settings,
                 args.output,
