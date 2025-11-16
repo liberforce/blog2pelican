@@ -536,8 +536,12 @@ def create_output_dir_if_required(dirname: str):
 
 
 class BlogConverter:
-    def extract_posts(self, args: Any) -> Generator[PelicanPost]:
-        blog_parser: BlogParser = create_blog_parser(args.origin, args)
+    def extract_posts(
+        self,
+        args: Any,
+        settings: ImportSettings,
+    ) -> Generator[PelicanPost]:
+        blog_parser: BlogParser = create_blog_parser(args.origin, args, settings)
         return blog_parser.parse(args.input)
 
 
@@ -548,7 +552,7 @@ def main():
     import_settings.check()
 
     bc = BlogConverter()
-    posts = bc.extract_posts(args)
+    posts = bc.extract_posts(args, import_settings)
     create_output_dir_if_required(args.output)
 
     attachments = get_attachments(args.input) if args.wp_attach else None

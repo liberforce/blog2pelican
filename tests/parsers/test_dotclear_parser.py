@@ -1,9 +1,18 @@
-from blog2pelican.parsers.dotclear import DotclearParser
+from blog2pelican.entities.import_settings import DotclearImportSettings
 from blog2pelican.entities.posts import PelicanPost
+from blog2pelican.parsers.dotclear import DotclearParser
 
 
 def test_simple():
-    parser = DotclearParser()
+    settings = DotclearImportSettings(
+        "dotclear",
+        input=None,
+        output=None,
+        markup=None,
+        author=None,
+        dircat=None,
+    )
+    parser = DotclearParser(settings)
     posts = parser.parse("tests/data/dotclear/standalone/posts/simple.txt")
     actual = next(posts)
     expected = PelicanPost(
@@ -21,9 +30,20 @@ def test_simple():
 
     assert actual == expected
 
+
 def test_shortest_post():
-    parser = DotclearParser()
-    posts = parser.parse("tests/data/dotclear/standalone/posts/favorite-command-after-a-clean-mandriva-install.txt")
+    settings = DotclearImportSettings(
+        "dotclear",
+        input=None,
+        output=None,
+        markup=None,
+        author=None,
+        dircat=None,
+    )
+    parser = DotclearParser(settings)
+    posts = parser.parse(
+        "tests/data/dotclear/standalone/posts/favorite-command-after-a-clean-mandriva-install.txt"
+    )
     actual = next(posts)
     expected = PelicanPost(
         title="Favorite command after a clean Mandriva Install...",
@@ -40,9 +60,20 @@ def test_shortest_post():
 
     assert actual == expected
 
+
 def test_embedded_image():
-    parser = DotclearParser()
-    posts = parser.parse("tests/data/dotclear/standalone/posts/guadec-2007-the-offline-desktop.txt")
+    settings = DotclearImportSettings(
+        "dotclear",
+        input=None,
+        output=None,
+        markup=None,
+        author=None,
+        dircat=None,
+    )
+    parser = DotclearParser(settings)
+    posts = parser.parse(
+        "tests/data/dotclear/standalone/posts/guadec-2007-the-offline-desktop.txt"
+    )
     actual = next(posts)
     expected = PelicanPost(
         title="GUADEC 2007: The offline desktop",

@@ -5,6 +5,7 @@ from html import unescape
 
 from pelican.utils import SafeDatetime
 
+from blog2pelican.entities.import_settings import ImportSettings
 from blog2pelican.entities.posts import PelicanPost
 from blog2pelican.helpers.soup import soup_from_xml_file
 from blog2pelican.tool import get_filename
@@ -15,7 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 class WordPressParser(BlogParser):
-    def __init__(self, custpost: bool = False):
+    def __init__(self, settings: ImportSettings, custpost: bool = False):
+        super().__init__(settings)
         self.custpost = custpost
 
     @staticmethod
