@@ -19,7 +19,7 @@ from pelican.log import init
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
 
-from blog2pelican.entities.import_settings import create_import_settings
+from blog2pelican.entities.import_settings import ImportSettings, create_import_settings
 from blog2pelican.entities.posts import PelicanPost
 from blog2pelican.helpers.pandoc import Pandoc
 from blog2pelican.helpers.soup import soup_from_xml_file
@@ -269,7 +269,7 @@ def is_pandoc_needed(in_markup):
 
 def posts_to_pelican(
     posts: Generator[PelicanPost],
-    out_markup,
+    settings: ImportSettings,
     output_path,
     dircat=False,
     strip_raw=False,
@@ -282,12 +282,14 @@ def posts_to_pelican(
 ):
     pandoc = Pandoc()
     posts_require_pandoc = []
+    out_markup = settings.markup
 
     slug_subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
 
     for post in posts:
         if filter_author and filter_author != post.author:
             continue
+
         if is_pandoc_needed(post.markup) and not pandoc.version:
             posts_require_pandoc.append(post.filename)
 
@@ -506,7 +508,7 @@ def main():
     init()
     posts_to_pelican(
         posts,
-        args.markup,
+        import_settings,
         args.output,
         dircat=args.dircat or False,
         dirpage=args.dirpage or False,
