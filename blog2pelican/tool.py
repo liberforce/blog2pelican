@@ -12,10 +12,8 @@ from urllib.error import URLError
 from urllib.parse import quote, urlparse, urlsplit, urlunsplit
 from urllib.request import urlretrieve
 
+import pelican.log
 from docutils.utils import column_width
-
-# because logging.setLoggerClass has to be called before logging.getLogger
-from pelican.log import init
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
 
@@ -555,8 +553,9 @@ def main():
 
     attachments = get_attachments(args.input) if args.wp_attach else None
 
-    # init logging
-    init()
+    # because logging.setLoggerClass has to be called before logging.getLogger
+    pelican.log.init()
+
     posts_require_pandoc = []
 
     for post in posts:
