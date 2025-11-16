@@ -1,4 +1,3 @@
-import sys
 from dataclasses import dataclass
 from typing import Literal
 
@@ -15,9 +14,5 @@ class WordPressImportSettings(ImportSettings):
     """Put WordPress custom post types in directories."""
     custpost: bool
 
-    def check(self):
-        if self.wp_attach and self.origin != "wordpress":
-            error = (
-                "You must be importing a wordpress xml to use the --wp-attach option"
-            )
-            sys.exit(error)
+    """Download files uploaded to wordpress as attachments"""
+    wp_attach: bool
