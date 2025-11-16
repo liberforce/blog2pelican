@@ -7,7 +7,7 @@ import sys
 import tempfile
 from collections import defaultdict
 from collections.abc import Generator
-from typing import Any, Sequence
+from typing import Any, Sequence, cast
 from urllib.error import URLError
 from urllib.parse import quote, urlparse, urlsplit, urlunsplit
 from urllib.request import urlretrieve
@@ -17,7 +17,11 @@ from docutils.utils import column_width
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
 
-from blog2pelican.entities.import_settings import ImportSettings, create_import_settings
+from blog2pelican.entities.import_settings import (
+    ImportSettings,
+    WordPressImportSettings,
+    create_import_settings,
+)
 from blog2pelican.entities.posts import PelicanPost
 from blog2pelican.helpers.pandoc import Pandoc
 from blog2pelican.helpers.soup import soup_from_xml_file
@@ -462,45 +466,6 @@ def create_output_dir_if_required(dirname: str):
 
 
 class BlogConverter:
-    def extract_attachments(self, settings: ImportSettings, args: Any):
-        """returns a dictionary of posts that have attachments with a list
-        of the attachment_urls
-        """
-        if not args.wp_attach:
-            return None
-
-        xml_filepath = settings.input
-        soup = soup_from_xml_file(xml_filepath)
-        items = soup.rss.channel.find_all("item")
-        names = {}
-        attachments = []
-
-        for item in items:
-            kind = item.find("post_type").string
-            post_name = item.find("post_name").string
-            post_id = item.find("post_id").string
-
-            if kind == "attachment":
-                attachments.append(
-                    (
-                        item.find("post_parent").string,
-                        item.find("attachment_url").string,
-                    )
-                )
-            else:
-                filename = get_filename(post_name, post_id)
-                names[post_id] = filename
-        attachedposts = defaultdict(set)
-        for parent, url in attachments:
-            try:
-                parent_name = names[parent]
-            except KeyError:
-                # attachment's parent is not a valid post
-                parent_name = None
-
-            attachedposts[parent_name].add(url)
-        return attachedposts
-
     def extract_posts(
         self,
         settings: ImportSettings,
@@ -550,6 +515,9 @@ class BlogConverter:
             urls = attachments[None]
             download_attachments(output_path, urls)
 
+    def extract_attachments(self, settings: ImportSettings):
+        return None
+
     def convert(
         self,
         posts: Sequence[PelicanPost],
@@ -585,16 +553,61 @@ class BlogConverter:
             )
 
 
+class WordPressConverter(BlogConverter):
+    def extract_attachments(self, settings: ImportSettings):
+        """
+        Return a dictionary of posts that have attachments.
+
+        Each post has list of the attachment_urls.
+        """
+        s = cast(WordPressImportSettings, settings)
+
+        if not s.wp_attach:
+            return None
+
+        xml_filepath = settings.input
+        soup = soup_from_xml_file(xml_filepath)
+        items = soup.rss.channel.find_all("item")
+        names = {}
+        attachments = []
+
+        for item in items:
+            kind = item.find("post_type").string
+            post_name = item.find("post_name").string
+            post_id = item.find("post_id").string
+
+            if kind == "attachment":
+                attachments.append(
+                    (
+                        item.find("post_parent").string,
+                        item.find("attachment_url").string,
+                    )
+                )
+            else:
+                filename = get_filename(post_name, post_id)
+                names[post_id] = filename
+        attachedposts = defaultdict(set)
+        for parent, url in attachments:
+            try:
+                parent_name = names[parent]
+            except KeyError:
+                # attachment's parent is not a valid post
+                parent_name = None
+
+            attachedposts[parent_name].add(url)
+        return attachedposts
+
+
 def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
     settings = create_import_settings(args.origin, args)
     settings.check()
 
-    bc = BlogConverter()
+    bc = WordPressConverter() if args.origin == "wordpress" else BlogConverter()
     posts = bc.extract_posts(settings)
     create_output_dir_if_required(args.output)
-    attachments = bc.extract_attachments(settings, args)
+    attachments = bc.extract_attachments(settings)
     bc.convert(posts, settings, args, attachments)
 
     # because logging.setLoggerClass has to be called before logging.getLogger
