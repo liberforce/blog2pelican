@@ -1,12 +1,20 @@
 import abc
 from collections.abc import Generator
+from typing import Generic, TypeVar
 
 from blog2pelican.entities.import_settings import ImportSettings
 from blog2pelican.entities.posts import PelicanPost
 
+S = TypeVar("S", bound=ImportSettings)
 
-class BlogParser(abc.ABC):
-    def __init__(self, settings: ImportSettings):
+
+class BlogParser(abc.ABC, Generic[S]):
+    settings: S | None
+
+    def __init__(self):
+        self.settings = None
+
+    def use_settings(self, settings: S):
         self.settings = settings
 
     @abc.abstractmethod

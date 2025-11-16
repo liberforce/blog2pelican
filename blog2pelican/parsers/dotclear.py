@@ -6,6 +6,7 @@ import pelican.utils
 import phpserialize
 from pelican.settings import DEFAULT_CONFIG
 
+from blog2pelican.entities.import_settings import DotclearImportSettings
 from blog2pelican.entities.posts import PelicanPost
 from blog2pelican.helpers.pelican_format import pelican_format_datetime
 
@@ -48,7 +49,7 @@ class DotclearPost:
     # post_position: str
 
 
-class DotclearParser(BlogParser):
+class DotclearParser(BlogParser[DotclearImportSettings]):
     def _get_tags(self, post_meta, post_title=None):
         """
         Get tags related to a post

@@ -1,34 +1,30 @@
-from typing import Any
-
-from blog2pelican.entities.import_settings import ImportSettings
-
 from .base import BlogParser
 
 
-def create_blog_parser(origin: str, args: Any, settings: ImportSettings) -> BlogParser:
+def create_blog_parser(origin: str) -> BlogParser:
     if origin == "blogger":
         from blog2pelican.parsers.blogger import BloggerParser
 
-        return BloggerParser(settings)
+        return BloggerParser()
     elif origin == "dotclear":
         from blog2pelican.parsers.dotclear import DotclearParser
 
-        return DotclearParser(settings)
+        return DotclearParser()
     elif origin == "medium":
         from blog2pelican.parsers.medium import MediumParser
 
-        return MediumParser(settings)
+        return MediumParser()
     elif origin == "tumblr":
         from blog2pelican.parsers.tumblr import TumblrParser
 
-        return TumblrParser(settings, blogname=args.blogname)
+        return TumblrParser()
     elif origin == "wordpress":
         from blog2pelican.parsers.wordpress import WordPressParser
 
-        return WordPressParser(settings, custpost=args.wp_custpost)
+        return WordPressParser()
     elif origin == "feed":
         from blog2pelican.parsers.feed import FeedParser
 
-        return FeedParser(settings)
+        return FeedParser()
     else:
         raise ValueError(f"Unhandled origin {origin}")

@@ -12,7 +12,7 @@ def test_simple():
         author=None,
         dircat=None,
     )
-    parser = DotclearParser(settings)
+    parser = DotclearParser()
     posts = parser.parse("tests/data/dotclear/standalone/posts/simple.txt")
     actual = next(posts)
     expected = PelicanPost(
@@ -40,7 +40,7 @@ def test_shortest_post():
         author=None,
         dircat=None,
     )
-    parser = DotclearParser(settings)
+    parser = DotclearParser()
     posts = parser.parse(
         "tests/data/dotclear/standalone/posts/favorite-command-after-a-clean-mandriva-install.txt"
     )
@@ -70,7 +70,7 @@ def test_embedded_image():
         author=None,
         dircat=None,
     )
-    parser = DotclearParser(settings)
+    parser = DotclearParser()
     posts = parser.parse(
         "tests/data/dotclear/standalone/posts/guadec-2007-the-offline-desktop.txt"
     )

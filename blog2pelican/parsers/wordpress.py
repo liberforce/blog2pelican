@@ -5,7 +5,7 @@ from html import unescape
 
 from pelican.utils import SafeDatetime
 
-from blog2pelican.entities.import_settings import ImportSettings
+from blog2pelican.entities.import_settings import WordPressImportSettings
 from blog2pelican.entities.posts import PelicanPost
 from blog2pelican.helpers.soup import soup_from_xml_file
 from blog2pelican.tool import get_filename
@@ -15,10 +15,11 @@ from .base import BlogParser
 logger = logging.getLogger(__name__)
 
 
-class WordPressParser(BlogParser):
-    def __init__(self, settings: ImportSettings, custpost: bool = False):
-        super().__init__(settings)
-        self.custpost = custpost
+class WordPressParser(BlogParser[WordPressImportSettings]):
+
+    @property
+    def custpost(self) -> bool:
+        return self.settings.custpost if self.settings else False
 
     @staticmethod
     def decode_wp_content(content, br=True):

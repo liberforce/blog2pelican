@@ -4,13 +4,14 @@ from collections.abc import Generator
 
 import dateutil.parser
 
+from blog2pelican.entities.import_settings import MediumImportSettings
 from blog2pelican.entities.posts import PelicanPost
 from blog2pelican.helpers.soup import import_bs4, soup_from_xml_file
 
 from .base import BlogParser
 
 
-class MediumParser(BlogParser):
+class MediumParser(BlogParser[MediumImportSettings]):
     def strip_medium_post_content(self, soup) -> str:
         """Strip some tags and attributes from medium post content.
 

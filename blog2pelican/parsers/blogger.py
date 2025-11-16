@@ -3,13 +3,14 @@ from collections.abc import Generator
 
 from pelican.utils import SafeDatetime
 
+from blog2pelican.entities.import_settings import BloggerImportSettings
 from blog2pelican.entities.posts import PelicanPost
 from blog2pelican.helpers.soup import soup_from_xml_file
 
 from .base import BlogParser
 
 
-class BloggerParser(BlogParser):
+class BloggerParser(BlogParser[BloggerImportSettings]):
     def parse(self, path: str) -> Generator[PelicanPost]:
         """Opens a blogger XML file, and yield Pelican fields"""
 

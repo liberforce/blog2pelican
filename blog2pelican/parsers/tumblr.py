@@ -6,16 +6,18 @@ from collections.abc import Generator
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import SafeDatetime, slugify
 
-from blog2pelican.entities.import_settings import ImportSettings
+from blog2pelican.entities.import_settings import TumblrImportSettings
 from blog2pelican.entities.posts import PelicanPost
 
 from .base import BlogParser
 
 
-class TumblrParser(BlogParser):
-    def __init__(self, settings: ImportSettings, blogname=None):
-        super().__init__(settings)
-        self.blogname = blogname
+class TumblrParser(BlogParser[TumblrImportSettings]):
+    @property
+    def blogname(self) -> str:
+        return (
+            self.settings.blogname if self.settings and self.settings.blogname else ""
+        )
 
     def _get_tumblr_posts(self, api_key, offset=0):
         url = (

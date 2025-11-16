@@ -541,7 +541,8 @@ class BlogConverter:
         args: Any,
         settings: ImportSettings,
     ) -> Generator[PelicanPost]:
-        blog_parser: BlogParser = create_blog_parser(args.origin, args, settings)
+        blog_parser: BlogParser = create_blog_parser(args.origin)
+        blog_parser.use_settings(settings)
         return blog_parser.parse(args.input)
 
 

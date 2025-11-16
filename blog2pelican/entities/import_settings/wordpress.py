@@ -12,6 +12,9 @@ class WordPressImportSettings(ImportSettings):
     """Put pages in pages subdirectories"""
     dirpage: bool  # Blogger & WordPress only
 
+    """Put WordPress custom post types in directories."""
+    custpost: bool
+
     def check(self):
         if self.wp_attach and self.origin != "wordpress":
             error = (
