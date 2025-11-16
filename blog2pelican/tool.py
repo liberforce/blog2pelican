@@ -282,7 +282,6 @@ def posts_to_pelican(
 ):
     pandoc = Pandoc()
     posts_require_pandoc = []
-    out_markup = settings.markup
 
     slug_subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
 
@@ -307,50 +306,14 @@ def posts_to_pelican(
         else:
             links = None
 
-        ext = get_ext(out_markup, post.markup)
-        if ext == ".adoc":
-            header = build_asciidoc_header(
-                post.title,
-                post.date,
-                post.author,
-                post.categories,
-                post.tags,
-                slug,
-                post.status,
-                attachments,
-            )
-        elif ext == ".md":
-            header = build_markdown_header(
-                post.title,
-                post.date,
-                post.author,
-                post.categories,
-                post.tags,
-                slug,
-                post.status,
-                links.values() if links else None,
-            )
-        else:
-            out_markup = "rst"
-            header = build_header(
-                post.title,
-                post.date,
-                post.author,
-                post.categories,
-                post.tags,
-                slug,
-                post.status,
-                links.values() if links else None,
-            )
-
-        out_filename = get_out_filename(
+        out_filename, out_markup, header = get_output_data(
+            settings,
+            post,
+            slug,
+            attachments,
+            links,
             output_path,
-            post.filename,
-            ext,
-            post.kind,
             dirpage,
-            dircat,
-            post.categories,
             wp_custpost,
             slug_subs,
         )
@@ -383,6 +346,68 @@ def posts_to_pelican(
         print("downloading attachments that don't have a parent post")
         urls = attachments[None]
         download_attachments(output_path, urls)
+
+
+def get_output_data(
+    settings: ImportSettings,
+    post: PelicanPost,
+    slug,
+    attachments,
+    links,
+    output_path,
+    dirpage,
+    wp_custpost,
+    slug_subs,
+):
+    out_markup = settings.markup
+    ext = get_ext(settings.markup, post.markup)
+
+    if ext == ".adoc":
+        header = build_asciidoc_header(
+            post.title,
+            post.date,
+            post.author,
+            post.categories,
+            post.tags,
+            slug,
+            post.status,
+            attachments,
+        )
+    elif ext == ".md":
+        header = build_markdown_header(
+            post.title,
+            post.date,
+            post.author,
+            post.categories,
+            post.tags,
+            slug,
+            post.status,
+            links.values() if links else None,
+        )
+    else:
+        header = build_header(
+            post.title,
+            post.date,
+            post.author,
+            post.categories,
+            post.tags,
+            slug,
+            post.status,
+            links.values() if links else None,
+        )
+
+    out_filename = get_out_filename(
+        output_path,
+        post.filename,
+        ext,
+        post.kind,
+        dirpage,
+        settings.dircat,
+        post.categories,
+        wp_custpost,
+        slug_subs,
+    )
+    return out_filename, out_markup, header
 
 
 def build_argument_parser() -> argparse.ArgumentParser:
