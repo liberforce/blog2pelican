@@ -548,11 +548,11 @@ class BlogConverter:
 def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
-    import_settings = create_import_settings(args.origin, args)
-    import_settings.check()
+    settings = create_import_settings(args.origin, args)
+    settings.check()
 
     bc = BlogConverter()
-    posts = bc.extract_posts(import_settings)
+    posts = bc.extract_posts(settings)
     create_output_dir_if_required(args.output)
 
     attachments = get_attachments(args.input) if args.wp_attach else None
@@ -566,7 +566,7 @@ def main():
         try:
             post_to_pelican(
                 post,
-                import_settings,
+                settings,
                 args.output,
                 dircat=args.dircat or False,
                 dirpage=args.dirpage or False,
