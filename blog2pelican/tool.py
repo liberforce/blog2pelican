@@ -7,7 +7,7 @@ import sys
 import tempfile
 from collections import defaultdict
 from collections.abc import Generator
-from typing import Any
+from typing import Any, Sequence
 from urllib.error import URLError
 from urllib.parse import quote, urlparse, urlsplit, urlunsplit
 from urllib.request import urlretrieve
@@ -544,6 +544,40 @@ class BlogConverter:
             urls = attachments[None]
             download_attachments(output_path, urls)
 
+    def convert(
+        self,
+        posts: Sequence[PelicanPost],
+        settings: ImportSettings,
+        args: Any,
+        attachments,
+    ):
+        posts_require_pandoc = []
+
+        for post in posts:
+            try:
+                self.convert_post(
+                    post,
+                    settings,
+                    args.output,
+                    dircat=args.dircat or False,
+                    dirpage=args.dirpage or False,
+                    strip_raw=args.strip_raw or False,
+                    disable_slugs=args.disable_slugs or False,
+                    filter_author=args.author,
+                    wp_custpost=args.wp_custpost or False,
+                    wp_attach=args.wp_attach or False,
+                    attachments=attachments or None,
+                )
+            except MissingPandocError:
+                posts_require_pandoc.append(post.filename)
+
+        if posts_require_pandoc:
+            logger.error(
+                "Pandoc must be installed to import the following posts:\n  {}".format(
+                    "\n  ".join(posts_require_pandoc)
+                )
+            )
+
 
 def main():
     argument_parser = build_argument_parser()
@@ -556,36 +590,10 @@ def main():
     create_output_dir_if_required(args.output)
 
     attachments = get_attachments(args.input) if args.wp_attach else None
+    bc.convert(posts, settings, args, attachments)
 
     # because logging.setLoggerClass has to be called before logging.getLogger
     pelican.log.init()
-
-    posts_require_pandoc = []
-
-    for post in posts:
-        try:
-            bc.convert_post(
-                post,
-                settings,
-                args.output,
-                dircat=args.dircat or False,
-                dirpage=args.dirpage or False,
-                strip_raw=args.strip_raw or False,
-                disable_slugs=args.disable_slugs or False,
-                filter_author=args.author,
-                wp_custpost=args.wp_custpost or False,
-                wp_attach=args.wp_attach or False,
-                attachments=attachments or None,
-            )
-        except MissingPandocError:
-            posts_require_pandoc.append(post.filename)
-
-    if posts_require_pandoc:
-        logger.error(
-            "Pandoc must be installed to import the following posts:\n  {}".format(
-                "\n  ".join(posts_require_pandoc)
-            )
-        )
 
 
 if __name__ == "__main__":
