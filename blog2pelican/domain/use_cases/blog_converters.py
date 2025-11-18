@@ -11,7 +11,7 @@ from blog2pelican.domain.entities.settings import (
 )
 from blog2pelican.domain.ports.blog_reader import BlogReader
 from blog2pelican.domain.use_cases.convert_post import (
-    PostConverter,
+    ConvertPostUseCase,
     download_attachments,
 )
 from blog2pelican.helpers.pandoc import Pandoc
@@ -65,7 +65,7 @@ class BlogConverter:
         if is_pandoc_needed(post.markup) and not pandoc.version:
             raise MissingPandocError
 
-        pc = PostConverter()
+        pc = ConvertPostUseCase()
         pc.convert(
             post,
             settings,

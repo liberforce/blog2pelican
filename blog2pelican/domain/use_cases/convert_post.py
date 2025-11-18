@@ -274,7 +274,7 @@ def get_output_data(
     return out_filename, out_markup, header
 
 
-class PostConverter:
+class ConvertPostUseCase:
     def convert(
         self,
         post: Post,
