@@ -4,7 +4,7 @@ from collections.abc import Generator
 
 import dateutil.parser
 
-from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.posts import Post
 from blog2pelican.domain.entities.settings import MediumSettings
 from blog2pelican.domain.ports.blog_reader import BlogReader
 from blog2pelican.helpers.soup import import_bs4, soup_from_xml_file
@@ -59,7 +59,7 @@ class MediumReader(BlogReader[MediumSettings]):
         all_content = "".join(str(element) for element in soup.contents)
         return all_content
 
-    def _medium2fields(self, filepath: str) -> PelicanPost:
+    def _medium2fields(self, filepath: str) -> Post:
         """Take an HTML post from a medium export, return Pelican posts."""
 
         soup = soup_from_xml_file(filepath, "html.parser")
@@ -99,7 +99,7 @@ class MediumReader(BlogReader[MediumSettings]):
 
         slug = self.medium_slug(filepath)
 
-        return PelicanPost(
+        return Post(
             title,
             content,
             slug,
@@ -127,7 +127,7 @@ class MediumReader(BlogReader[MediumSettings]):
         slug = re.sub(r"((-)+([0-9a-f]+|DRAFT))+$", "", slug)
         return slug
 
-    def read_posts(self, path: str) -> Generator[PelicanPost]:
+    def read_posts(self, path: str) -> Generator[Post]:
         """
         Take HTML posts in a medium export directory, and yield Pelican fields.
         path: path to the medium export dir, or file to parse.

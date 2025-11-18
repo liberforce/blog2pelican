@@ -5,7 +5,7 @@ from html import unescape
 
 from pelican.utils import SafeDatetime
 
-from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.posts import Post
 from blog2pelican.domain.entities.settings import WordPressSettings
 from blog2pelican.domain.ports.blog_reader import BlogReader
 from blog2pelican.helpers.soup import soup_from_xml_file
@@ -113,7 +113,7 @@ class WordPressReader(BlogReader[WordPressSettings]):
 
         return content
 
-    def read_posts(self, xml) -> Generator[PelicanPost]:
+    def read_posts(self, xml) -> Generator[Post]:
         """Opens a wordpress XML file, and yield Pelican fields"""
 
         soup = soup_from_xml_file(xml)
@@ -171,7 +171,7 @@ class WordPressReader(BlogReader[WordPressSettings]):
                         pass
                     else:
                         kind = post_type
-                yield PelicanPost(
+                yield Post(
                     title,
                     content,
                     filename,

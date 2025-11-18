@@ -6,7 +6,7 @@ import pelican.utils
 import phpserialize
 from pelican.settings import DEFAULT_CONFIG
 
-from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.posts import Post
 from blog2pelican.domain.entities.settings import DotclearSettings
 from blog2pelican.domain.ports.blog_reader import BlogReader
 from blog2pelican.helpers.pelican_format import pelican_format_datetime
@@ -150,7 +150,7 @@ class DotclearReader(BlogReader[DotclearSettings]):
         content = content.replace("\\", "")
         return content
 
-    def read_posts(self, path: str) -> Generator[PelicanPost]:
+    def read_posts(self, path: str) -> Generator[Post]:
         """Parse a Dotclear export file, and yield posts"""
         categories_dict, raw_posts = self._parse_sections(path)
 
@@ -184,7 +184,7 @@ class DotclearReader(BlogReader[DotclearSettings]):
             kind = "article"  # TODO: Recognise pages
             status = "published"  # TODO: Find a way for draft posts
 
-            yield PelicanPost(
+            yield Post(
                 dc_post.post_title,
                 content,
                 pelican.utils.slugify(dc_post.post_title, regex_subs=subs),

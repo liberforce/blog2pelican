@@ -1,12 +1,12 @@
 from blog2pelican.domain.adapters.blog_readers.dotclear import DotclearReader
-from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.posts import Post
 
 
 def test_simple():
     reader = DotclearReader()
     posts = reader.read_posts("tests/data/dotclear/standalone/posts/simple.txt")
     actual = next(posts)
-    expected = PelicanPost(
+    expected = Post(
         title="En direct d'Istanbul",
         content="<p>first paragraph</p>",
         filename="en-direct-distanbul",
@@ -28,7 +28,7 @@ def test_shortest_post():
         "tests/data/dotclear/standalone/posts/favorite-command-after-a-clean-mandriva-install.txt"
     )
     actual = next(posts)
-    expected = PelicanPost(
+    expected = Post(
         title="Favorite command after a clean Mandriva Install...",
         content="<pre>urpme -a mono</pre>",
         filename="favorite-command-after-a-clean-mandriva-install",
@@ -50,7 +50,7 @@ def test_embedded_image():
         "tests/data/dotclear/standalone/posts/guadec-2007-the-offline-desktop.txt"
     )
     actual = next(posts)
-    expected = PelicanPost(
+    expected = Post(
         title="GUADEC 2007: The offline desktop",
         content='<p><img alt="" src="/public/guadec/2007/offline-desktop.png" /></p>',
         filename="guadec-2007-the-offline-desktop",

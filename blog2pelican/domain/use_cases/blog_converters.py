@@ -4,7 +4,7 @@ from collections.abc import Generator
 from typing import Any, Sequence, cast
 
 from blog2pelican.domain.adapters.blog_readers import create_blog_reader
-from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.posts import Post
 from blog2pelican.domain.entities.settings import (
     Settings,
     WordPressSettings,
@@ -36,14 +36,14 @@ class BlogConverter:
     def extract_posts(
         self,
         settings: Settings,
-    ) -> Generator[PelicanPost]:
+    ) -> Generator[Post]:
         blog_reader: BlogReader = create_blog_reader(settings.origin)
         blog_reader.use_settings(settings)
         return blog_reader.read_posts(settings.input)
 
     def convert_post(
         self,
-        post: PelicanPost,
+        post: Post,
         settings: Settings,
         output_path,
         dircat=False,
@@ -87,7 +87,7 @@ class BlogConverter:
 
     def convert(
         self,
-        posts: Sequence[PelicanPost],
+        posts: Sequence[Post],
         settings: Settings,
         args: Any,
         attachments,

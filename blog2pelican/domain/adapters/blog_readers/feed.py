@@ -4,13 +4,13 @@ from collections.abc import Generator
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
 
-from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.posts import Post
 from blog2pelican.domain.entities.settings import FeedSettings
 from blog2pelican.domain.ports.blog_reader import BlogReader
 
 
 class FeedReader(BlogReader[FeedSettings]):
-    def read_posts(self, file) -> Generator[PelicanPost]:
+    def read_posts(self, file) -> Generator[Post]:
         """Read a feed and yield pelican fields"""
         import feedparser  # noqa: PLC0415
 
@@ -27,7 +27,7 @@ class FeedReader(BlogReader[FeedSettings]):
 
             slug = slugify(entry.title, regex_subs=subs)
             kind = "article"
-            yield PelicanPost(
+            yield Post(
                 entry.title,
                 entry.description,
                 slug,

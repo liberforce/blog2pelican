@@ -3,14 +3,14 @@ from collections.abc import Generator
 
 from pelican.utils import SafeDatetime
 
-from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.posts import Post
 from blog2pelican.domain.entities.settings import BloggerSettings
 from blog2pelican.domain.ports.blog_reader import BlogReader
 from blog2pelican.helpers.soup import soup_from_xml_file
 
 
 class BloggerReader(BlogReader[BloggerSettings]):
-    def read_posts(self, path: str) -> Generator[PelicanPost]:
+    def read_posts(self, path: str) -> Generator[Post]:
         """Opens a blogger XML file, and yield Pelican fields"""
 
         soup = soup_from_xml_file(path)
@@ -64,7 +64,7 @@ class BloggerReader(BlogReader[BloggerSettings]):
             except AttributeError:
                 pass
 
-            yield PelicanPost(
+            yield Post(
                 title,
                 content,
                 filename,

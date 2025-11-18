@@ -2,7 +2,7 @@ import abc
 from collections.abc import Generator
 from typing import Generic, TypeVar
 
-from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.posts import Post
 from blog2pelican.domain.entities.settings import Settings
 
 S = TypeVar("S", bound=Settings)
@@ -18,7 +18,7 @@ class BlogReader(abc.ABC, Generic[S]):
         self.settings = settings
 
     @abc.abstractmethod
-    def read_posts(self, path: str) -> Generator[PelicanPost]:
+    def read_posts(self, path: str) -> Generator[Post]:
         """
         path: path to the file or dir containing the blog data to parse.
         """

@@ -3,7 +3,7 @@ import os.path
 import subprocess
 import sys
 
-from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.posts import Post
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +45,7 @@ class Pandoc:
 
     def convert(
         self,
-        post: PelicanPost,
+        post: Post,
         out_markup,
         output_path,
         strip_raw,

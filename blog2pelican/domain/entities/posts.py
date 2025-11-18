@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class PelicanPost:
+class Post:
     title: str
     content: str
     filename: str
