@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 class WordPressParser(BlogParser[WordPressImportSettings]):
-
     @property
     def custpost(self) -> bool:
         return self.settings.custpost if self.settings else False
