@@ -10,9 +10,12 @@ from blog2pelican.domain.entities.settings import (
     WordPressSettings,
 )
 from blog2pelican.domain.ports.blog_reader import BlogReader
+from blog2pelican.domain.use_cases.convert_post import (
+    PostConverter,
+    download_attachments,
+)
 from blog2pelican.helpers.pandoc import Pandoc
 from blog2pelican.helpers.soup import soup_from_xml_file
-from blog2pelican.posts.converters import PostConverter, download_attachments
 
 logger = logging.getLogger(__name__)
 
