@@ -6,12 +6,11 @@ from pelican.utils import slugify
 
 from blog2pelican.domain.entities.posts import PelicanPost
 from blog2pelican.domain.entities.settings import FeedSettings
+from blog2pelican.domain.ports.blog_reader import BlogReader
 
-from .base import BlogParser
 
-
-class FeedParser(BlogParser[FeedSettings]):
-    def parse(self, file) -> Generator[PelicanPost]:
+class FeedReader(BlogReader[FeedSettings]):
+    def read_posts(self, file) -> Generator[PelicanPost]:
         """Read a feed and yield pelican fields"""
         import feedparser  # noqa: PLC0415
 

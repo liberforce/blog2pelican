@@ -3,15 +3,15 @@ from collections import defaultdict
 from collections.abc import Generator
 from typing import Any, Sequence, cast
 
+from blog2pelican.domain.adapters.blog_readers import create_blog_reader
 from blog2pelican.domain.entities.posts import PelicanPost
 from blog2pelican.domain.entities.settings import (
     Settings,
     WordPressSettings,
 )
+from blog2pelican.domain.ports.blog_reader import BlogReader
 from blog2pelican.helpers.pandoc import Pandoc
 from blog2pelican.helpers.soup import soup_from_xml_file
-from blog2pelican.parsers import create_blog_parser
-from blog2pelican.parsers.base import BlogParser
 from blog2pelican.posts.converters import PostConverter, download_attachments
 
 logger = logging.getLogger(__name__)
@@ -37,9 +37,9 @@ class BlogConverter:
         self,
         settings: Settings,
     ) -> Generator[PelicanPost]:
-        blog_parser: BlogParser = create_blog_parser(settings.origin)
-        blog_parser.use_settings(settings)
-        return blog_parser.parse(settings.input)
+        blog_reader: BlogReader = create_blog_reader(settings.origin)
+        blog_reader.use_settings(settings)
+        return blog_reader.read_posts(settings.input)
 
     def convert_post(
         self,

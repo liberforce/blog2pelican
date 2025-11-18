@@ -8,11 +8,10 @@ from pelican.utils import SafeDatetime, slugify
 
 from blog2pelican.domain.entities.posts import PelicanPost
 from blog2pelican.domain.entities.settings import TumblrSettings
+from blog2pelican.domain.ports.blog_reader import BlogReader
 
-from .base import BlogParser
 
-
-class TumblrParser(BlogParser[TumblrSettings]):
+class TumblrReader(BlogReader[TumblrSettings]):
     @property
     def blogname(self) -> str:
         return (
@@ -29,7 +28,7 @@ class TumblrParser(BlogParser[TumblrSettings]):
         posts = json.loads(handle.read().decode("utf-8"))
         return posts.get("response").get("posts")
 
-    def parse(self, api_key) -> Generator[PelicanPost]:
+    def read_posts(self, api_key) -> Generator[PelicanPost]:
         """s Tumblr posts (API v2)"""
         offset = 0
         posts = self._get_tumblr_posts(api_key, offset)

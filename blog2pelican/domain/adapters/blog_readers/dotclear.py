@@ -8,9 +8,8 @@ from pelican.settings import DEFAULT_CONFIG
 
 from blog2pelican.domain.entities.posts import PelicanPost
 from blog2pelican.domain.entities.settings import DotclearSettings
+from blog2pelican.domain.ports.blog_reader import BlogReader
 from blog2pelican.helpers.pelican_format import pelican_format_datetime
-
-from .base import BlogParser
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +48,7 @@ class DotclearPost:
     # post_position: str
 
 
-class DotclearParser(BlogParser[DotclearSettings]):
+class DotclearReader(BlogReader[DotclearSettings]):
     def _get_tags(self, post_meta, post_title=None):
         """
         Get tags related to a post
@@ -151,7 +150,7 @@ class DotclearParser(BlogParser[DotclearSettings]):
         content = content.replace("\\", "")
         return content
 
-    def parse(self, path: str) -> Generator[PelicanPost]:
+    def read_posts(self, path: str) -> Generator[PelicanPost]:
         """Parse a Dotclear export file, and yield posts"""
         categories_dict, raw_posts = self._parse_sections(path)
 

@@ -1,10 +1,10 @@
+from blog2pelican.domain.adapters.blog_readers.dotclear import DotclearReader
 from blog2pelican.domain.entities.posts import PelicanPost
-from blog2pelican.parsers.dotclear import DotclearParser
 
 
 def test_simple():
-    parser = DotclearParser()
-    posts = parser.parse("tests/data/dotclear/standalone/posts/simple.txt")
+    reader = DotclearReader()
+    posts = reader.read_posts("tests/data/dotclear/standalone/posts/simple.txt")
     actual = next(posts)
     expected = PelicanPost(
         title="En direct d'Istanbul",
@@ -23,8 +23,8 @@ def test_simple():
 
 
 def test_shortest_post():
-    parser = DotclearParser()
-    posts = parser.parse(
+    reader = DotclearReader()
+    posts = reader.read_posts(
         "tests/data/dotclear/standalone/posts/favorite-command-after-a-clean-mandriva-install.txt"
     )
     actual = next(posts)
@@ -45,8 +45,8 @@ def test_shortest_post():
 
 
 def test_embedded_image():
-    parser = DotclearParser()
-    posts = parser.parse(
+    reader = DotclearReader()
+    posts = reader.read_posts(
         "tests/data/dotclear/standalone/posts/guadec-2007-the-offline-desktop.txt"
     )
     actual = next(posts)

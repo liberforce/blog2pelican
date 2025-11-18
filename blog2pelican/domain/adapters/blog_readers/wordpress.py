@@ -7,15 +7,14 @@ from pelican.utils import SafeDatetime
 
 from blog2pelican.domain.entities.posts import PelicanPost
 from blog2pelican.domain.entities.settings import WordPressSettings
+from blog2pelican.domain.ports.blog_reader import BlogReader
 from blog2pelican.helpers.soup import soup_from_xml_file
 from blog2pelican.tool import get_filename
-
-from .base import BlogParser
 
 logger = logging.getLogger(__name__)
 
 
-class WordPressParser(BlogParser[WordPressSettings]):
+class WordPressReader(BlogReader[WordPressSettings]):
     @property
     def custpost(self) -> bool:
         return self.settings.custpost if self.settings else False
@@ -114,7 +113,7 @@ class WordPressParser(BlogParser[WordPressSettings]):
 
         return content
 
-    def parse(self, xml) -> Generator[PelicanPost]:
+    def read_posts(self, xml) -> Generator[PelicanPost]:
         """Opens a wordpress XML file, and yield Pelican fields"""
 
         soup = soup_from_xml_file(xml)
@@ -122,7 +121,7 @@ class WordPressParser(BlogParser[WordPressSettings]):
         for item in items:
             if item.find("status").string in ["publish", "draft"]:
                 try:
-                    # Use HTMLParser due to issues with BeautifulSoup 3
+                    # Use HTMLReader due to issues with BeautifulSoup 3
                     title = unescape(item.title.contents[0])
                 except IndexError:
                     title = "No title [{}]".format(item.find("post_name").string)

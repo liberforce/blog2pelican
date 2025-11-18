@@ -6,12 +6,11 @@ import dateutil.parser
 
 from blog2pelican.domain.entities.posts import PelicanPost
 from blog2pelican.domain.entities.settings import MediumSettings
+from blog2pelican.domain.ports.blog_reader import BlogReader
 from blog2pelican.helpers.soup import import_bs4, soup_from_xml_file
 
-from .base import BlogParser
 
-
-class MediumParser(BlogParser[MediumSettings]):
+class MediumReader(BlogReader[MediumSettings]):
     def strip_medium_post_content(self, soup) -> str:
         """Strip some tags and attributes from medium post content.
 
@@ -128,7 +127,7 @@ class MediumParser(BlogParser[MediumSettings]):
         slug = re.sub(r"((-)+([0-9a-f]+|DRAFT))+$", "", slug)
         return slug
 
-    def parse(self, path: str) -> Generator[PelicanPost]:
+    def read_posts(self, path: str) -> Generator[PelicanPost]:
         """
         Take HTML posts in a medium export directory, and yield Pelican fields.
         path: path to the medium export dir, or file to parse.
