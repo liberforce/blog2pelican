@@ -2,10 +2,10 @@ import abc
 from collections.abc import Generator
 from typing import Generic, TypeVar
 
-from blog2pelican.entities.import_settings import ImportSettings
 from blog2pelican.entities.posts import PelicanPost
+from blog2pelican.entities.settings import Settings
 
-S = TypeVar("S", bound=ImportSettings)
+S = TypeVar("S", bound=Settings)
 
 
 class BlogParser(abc.ABC, Generic[S]):

@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from .base import ImportSettings
+from .base import Settings
 
 
 @dataclass
-class BloggerImportSettings(ImportSettings):
+class BloggerSettings(Settings):
     origin: Literal["blogger"]
 
     """Put pages in pages subdirectories"""

@@ -11,8 +11,8 @@ from docutils.utils import column_width
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
 
-from blog2pelican.entities.import_settings import ImportSettings
 from blog2pelican.entities.posts import PelicanPost
+from blog2pelican.entities.settings import Settings
 from blog2pelican.helpers.pandoc import Pandoc
 
 logger = logging.getLogger(__name__)
@@ -213,7 +213,7 @@ def download_attachments(output_path, urls):
 
 
 def get_output_data(
-    settings: ImportSettings,
+    settings: Settings,
     post: PelicanPost,
     slug,
     attachments,
@@ -278,7 +278,7 @@ class PostConverter:
     def convert(
         self,
         post: PelicanPost,
-        settings: ImportSettings,
+        settings: Settings,
         output_path,
         dircat=False,
         strip_raw=False,

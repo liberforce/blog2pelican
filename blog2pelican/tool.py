@@ -7,7 +7,7 @@ import sys
 import pelican.log
 
 from blog2pelican.blogs.converters import create_blog_converter
-from blog2pelican.entities.import_settings import create_import_settings
+from blog2pelican.entities.settings import create_settings
 
 logger = logging.getLogger(__name__)
 
@@ -118,17 +118,17 @@ def create_output_dir_if_required(dirname: str):
 def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
-    settings = create_import_settings(args.origin, args)
+    settings = create_settings(args.origin, args)
     settings.check()
+
+    # logging.setLoggerClass has to be called before logging.getLogger
+    pelican.log.init()
 
     bc = create_blog_converter(settings.origin)
     posts = bc.extract_posts(settings)
     create_output_dir_if_required(settings.output)
     attachments = bc.extract_attachments(settings)
     bc.convert(posts, settings, args, attachments)
-
-    # because logging.setLoggerClass has to be called before logging.getLogger
-    pelican.log.init()
 
 
 if __name__ == "__main__":

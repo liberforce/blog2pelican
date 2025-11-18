@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from .base import ImportSettings
+from .base import Settings
 
 
 @dataclass
-class FeedImportSettings(ImportSettings):
+class FeedSettings(Settings):
     origin: Literal["feed"]

@@ -1,17 +1,8 @@
-from blog2pelican.entities.import_settings import DotclearImportSettings
 from blog2pelican.entities.posts import PelicanPost
 from blog2pelican.parsers.dotclear import DotclearParser
 
 
 def test_simple():
-    settings = DotclearImportSettings(
-        "dotclear",
-        input=None,
-        output=None,
-        markup=None,
-        author=None,
-        dircat=None,
-    )
     parser = DotclearParser()
     posts = parser.parse("tests/data/dotclear/standalone/posts/simple.txt")
     actual = next(posts)
@@ -32,14 +23,6 @@ def test_simple():
 
 
 def test_shortest_post():
-    settings = DotclearImportSettings(
-        "dotclear",
-        input=None,
-        output=None,
-        markup=None,
-        author=None,
-        dircat=None,
-    )
     parser = DotclearParser()
     posts = parser.parse(
         "tests/data/dotclear/standalone/posts/favorite-command-after-a-clean-mandriva-install.txt"
@@ -62,14 +45,6 @@ def test_shortest_post():
 
 
 def test_embedded_image():
-    settings = DotclearImportSettings(
-        "dotclear",
-        input=None,
-        output=None,
-        markup=None,
-        author=None,
-        dircat=None,
-    )
     parser = DotclearParser()
     posts = parser.parse(
         "tests/data/dotclear/standalone/posts/guadec-2007-the-offline-desktop.txt"

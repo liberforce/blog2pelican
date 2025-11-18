@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from .base import ImportSettings
+from .base import Settings
 
 
 @dataclass
-class WordPressImportSettings(ImportSettings):
+class WordPressSettings(Settings):
     origin: Literal["wordpress"]
 
     """Put pages in pages subdirectories"""

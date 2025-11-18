@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from .base import ImportSettings
+from .base import Settings
 
 
 @dataclass
-class TumblrImportSettings(ImportSettings):
+class TumblrSettings(Settings):
     origin: Literal["tumblr"]
 
     """Blog name"""

@@ -6,13 +6,13 @@ from collections.abc import Generator
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import SafeDatetime, slugify
 
-from blog2pelican.entities.import_settings import TumblrImportSettings
 from blog2pelican.entities.posts import PelicanPost
+from blog2pelican.entities.settings import TumblrSettings
 
 from .base import BlogParser
 
 
-class TumblrParser(BlogParser[TumblrImportSettings]):
+class TumblrParser(BlogParser[TumblrSettings]):
     @property
     def blogname(self) -> str:
         return (
@@ -30,7 +30,7 @@ class TumblrParser(BlogParser[TumblrImportSettings]):
         return posts.get("response").get("posts")
 
     def parse(self, api_key) -> Generator[PelicanPost]:
-        """Imports Tumblr posts (API v2)"""
+        """s Tumblr posts (API v2)"""
         offset = 0
         posts = self._get_tumblr_posts(api_key, offset)
         subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]

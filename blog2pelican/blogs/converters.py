@@ -3,11 +3,11 @@ from collections import defaultdict
 from collections.abc import Generator
 from typing import Any, Sequence, cast
 
-from blog2pelican.entities.import_settings import (
-    ImportSettings,
-    WordPressImportSettings,
-)
 from blog2pelican.entities.posts import PelicanPost
+from blog2pelican.entities.settings import (
+    Settings,
+    WordPressSettings,
+)
 from blog2pelican.helpers.pandoc import Pandoc
 from blog2pelican.helpers.soup import soup_from_xml_file
 from blog2pelican.parsers import create_blog_parser
@@ -35,7 +35,7 @@ def get_filename(post_name, post_id):
 class BlogConverter:
     def extract_posts(
         self,
-        settings: ImportSettings,
+        settings: Settings,
     ) -> Generator[PelicanPost]:
         blog_parser: BlogParser = create_blog_parser(settings.origin)
         blog_parser.use_settings(settings)
@@ -44,7 +44,7 @@ class BlogConverter:
     def convert_post(
         self,
         post: PelicanPost,
-        settings: ImportSettings,
+        settings: Settings,
         output_path,
         dircat=False,
         strip_raw=False,
@@ -82,13 +82,13 @@ class BlogConverter:
             urls = attachments[None]
             download_attachments(output_path, urls)
 
-    def extract_attachments(self, settings: ImportSettings):
+    def extract_attachments(self, settings: Settings):
         return None
 
     def convert(
         self,
         posts: Sequence[PelicanPost],
-        settings: ImportSettings,
+        settings: Settings,
         args: Any,
         attachments,
     ):
@@ -121,13 +121,13 @@ class BlogConverter:
 
 
 class WordPressConverter(BlogConverter):
-    def extract_attachments(self, settings: ImportSettings):
+    def extract_attachments(self, settings: Settings):
         """
         Return a dictionary of posts that have attachments.
 
         Each post has list of the attachment_urls.
         """
-        s = cast(WordPressImportSettings, settings)
+        s = cast(WordPressSettings, settings)
 
         if not s.wp_attach:
             return None

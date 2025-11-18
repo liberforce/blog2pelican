@@ -3,9 +3,12 @@ from typing import Literal
 
 
 @dataclass(kw_only=True)
-class ImportSettings:
-    """Origin of the blog to import"""
+class Settings:
+    """
+    Import Settings
+    """
 
+    """Origin of the blog to import"""
     origin: Literal[
         "blogger",
         "dotclear",
