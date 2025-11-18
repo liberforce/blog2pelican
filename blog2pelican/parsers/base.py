@@ -2,8 +2,8 @@ import abc
 from collections.abc import Generator
 from typing import Generic, TypeVar
 
-from blog2pelican.entities.posts import PelicanPost
-from blog2pelican.entities.settings import Settings
+from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.settings import Settings
 
 S = TypeVar("S", bound=Settings)
 

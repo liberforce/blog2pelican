@@ -3,8 +3,8 @@ from collections.abc import Generator
 
 from pelican.utils import SafeDatetime
 
-from blog2pelican.entities.posts import PelicanPost
-from blog2pelican.entities.settings import BloggerSettings
+from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.settings import BloggerSettings
 from blog2pelican.helpers.soup import soup_from_xml_file
 
 from .base import BlogParser

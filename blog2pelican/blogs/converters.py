@@ -3,8 +3,8 @@ from collections import defaultdict
 from collections.abc import Generator
 from typing import Any, Sequence, cast
 
-from blog2pelican.entities.posts import PelicanPost
-from blog2pelican.entities.settings import (
+from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.settings import (
     Settings,
     WordPressSettings,
 )

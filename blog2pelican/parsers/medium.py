@@ -4,8 +4,8 @@ from collections.abc import Generator
 
 import dateutil.parser
 
-from blog2pelican.entities.posts import PelicanPost
-from blog2pelican.entities.settings import MediumSettings
+from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.settings import MediumSettings
 from blog2pelican.helpers.soup import import_bs4, soup_from_xml_file
 
 from .base import BlogParser

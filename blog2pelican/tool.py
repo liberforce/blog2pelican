@@ -7,7 +7,7 @@ import sys
 import pelican.log
 
 from blog2pelican.blogs.converters import create_blog_converter
-from blog2pelican.entities.settings import create_settings
+from blog2pelican.domain.entities.settings import create_settings
 
 logger = logging.getLogger(__name__)
 

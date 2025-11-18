@@ -6,8 +6,8 @@ import pelican.utils
 import phpserialize
 from pelican.settings import DEFAULT_CONFIG
 
-from blog2pelican.entities.posts import PelicanPost
-from blog2pelican.entities.settings import DotclearSettings
+from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.settings import DotclearSettings
 from blog2pelican.helpers.pelican_format import pelican_format_datetime
 
 from .base import BlogParser

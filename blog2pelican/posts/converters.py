@@ -11,8 +11,8 @@ from docutils.utils import column_width
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
 
-from blog2pelican.entities.posts import PelicanPost
-from blog2pelican.entities.settings import Settings
+from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.settings import Settings
 from blog2pelican.helpers.pandoc import Pandoc
 
 logger = logging.getLogger(__name__)

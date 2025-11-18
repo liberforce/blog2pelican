@@ -3,7 +3,7 @@ import os.path
 import subprocess
 import sys
 
-from blog2pelican.entities.posts import PelicanPost
+from blog2pelican.domain.entities.posts import PelicanPost
 
 logger = logging.getLogger(__name__)
 

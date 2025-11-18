@@ -1,4 +1,4 @@
-from blog2pelican.entities.posts import PelicanPost
+from blog2pelican.domain.entities.posts import PelicanPost
 from blog2pelican.parsers.dotclear import DotclearParser
 
 

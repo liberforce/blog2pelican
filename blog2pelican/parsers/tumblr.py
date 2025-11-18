@@ -6,8 +6,8 @@ from collections.abc import Generator
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import SafeDatetime, slugify
 
-from blog2pelican.entities.posts import PelicanPost
-from blog2pelican.entities.settings import TumblrSettings
+from blog2pelican.domain.entities.posts import PelicanPost
+from blog2pelican.domain.entities.settings import TumblrSettings
 
 from .base import BlogParser
 
