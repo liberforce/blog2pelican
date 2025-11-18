@@ -35,7 +35,7 @@ def get_filename(post_name, post_id):
         return post_name
 
 
-class BlogConverter:
+class ConvertBlogUseCase:
     def extract_posts(
         self,
         settings: Settings,
@@ -123,7 +123,7 @@ class BlogConverter:
             )
 
 
-class WordPressConverter(BlogConverter):
+class ConvertWordPressUseCase(ConvertBlogUseCase):
     def extract_attachments(self, settings: Settings):
         """
         Return a dictionary of posts that have attachments.
@@ -169,9 +169,9 @@ class WordPressConverter(BlogConverter):
 
 
 _converter_classes = {
-    "wordpress": WordPressConverter,
+    "wordpress": ConvertWordPressUseCase,
 }
 
 
-def create_blog_converter(origin: str) -> BlogConverter:
-    return _converter_classes.get(origin, BlogConverter)()
+def create_blog_converter(origin: str) -> ConvertBlogUseCase:
+    return _converter_classes.get(origin, ConvertBlogUseCase)()
