@@ -86,50 +86,14 @@ class ConvertBlogUseCase:
             download_attachments(output_path, urls)
 
     def extract_attachments(self, settings: Settings):
-        return None
-
-    def convert(
-        self,
-        posts: Sequence[Post],
-        settings: Settings,
-        args: Any,
-        attachments,
-    ):
-        posts_require_pandoc = []
-
-        for post in posts:
-            try:
-                self.convert_post(
-                    post,
-                    settings,
-                    args.output,
-                    dircat=args.dircat or False,
-                    dirpage=args.dirpage or False,
-                    strip_raw=args.strip_raw or False,
-                    disable_slugs=args.disable_slugs or False,
-                    filter_author=args.author,
-                    wp_custpost=args.wp_custpost or False,
-                    wp_attach=args.wp_attach or False,
-                    attachments=attachments or None,
-                )
-            except MissingPandocError:
-                posts_require_pandoc.append(post.filename)
-
-        if posts_require_pandoc:
-            logger.error(
-                "Pandoc must be installed to import the following posts:\n  {}".format(
-                    "\n  ".join(posts_require_pandoc)
-                )
-            )
-
-
-class ConvertWordPressUseCase(ConvertBlogUseCase):
-    def extract_attachments(self, settings: Settings):
         """
         Return a dictionary of posts that have attachments.
 
         Each post has list of the attachment_urls.
         """
+        if settings.origin != "wordpress":
+            return None
+
         s = cast(WordPressSettings, settings)
 
         if not s.wp_attach:
@@ -167,11 +131,36 @@ class ConvertWordPressUseCase(ConvertBlogUseCase):
             attachedposts[parent_name].add(url)
         return attachedposts
 
+    def convert(
+        self,
+        posts: Sequence[Post],
+        settings: Settings,
+        args: Any,
+        attachments,
+    ):
+        posts_require_pandoc = []
 
-_converter_classes = {
-    "wordpress": ConvertWordPressUseCase,
-}
+        for post in posts:
+            try:
+                self.convert_post(
+                    post,
+                    settings,
+                    args.output,
+                    dircat=args.dircat or False,
+                    dirpage=args.dirpage or False,
+                    strip_raw=args.strip_raw or False,
+                    disable_slugs=args.disable_slugs or False,
+                    filter_author=args.author,
+                    wp_custpost=args.wp_custpost or False,
+                    wp_attach=args.wp_attach or False,
+                    attachments=attachments or None,
+                )
+            except MissingPandocError:
+                posts_require_pandoc.append(post.filename)
 
-
-def create_blog_converter(origin: str) -> ConvertBlogUseCase:
-    return _converter_classes.get(origin, ConvertBlogUseCase)()
+        if posts_require_pandoc:
+            logger.error(
+                "Pandoc must be installed to import the following posts:\n  {}".format(
+                    "\n  ".join(posts_require_pandoc)
+                )
+            )

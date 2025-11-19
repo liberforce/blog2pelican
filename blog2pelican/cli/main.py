@@ -6,7 +6,7 @@ import sys
 
 import pelican.log
 
-from blog2pelican.application.use_cases.convert_blog import create_blog_converter
+from blog2pelican.application.use_cases.convert_blog import ConvertBlogUseCase
 from blog2pelican.domain.entities.settings import create_settings
 
 logger = logging.getLogger(__name__)
@@ -124,7 +124,7 @@ def main():
     # logging.setLoggerClass has to be called before logging.getLogger
     pelican.log.init()
 
-    bc = create_blog_converter(settings.origin)
+    bc = ConvertBlogUseCase()
     posts = bc.extract_posts(settings)
     create_output_dir_if_required(settings.output)
     attachments = bc.extract_attachments(settings)
