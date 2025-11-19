@@ -1,6 +1,7 @@
 import logging
 from collections.abc import Generator, Mapping
 from dataclasses import dataclass
+from typing import cast
 
 import pelican.utils
 import phpserialize
@@ -21,7 +22,7 @@ class DotclearPost:
     # post_id: str
     # blog_id: str
     user_id: str
-    cat_ids: list[str]
+    cat_ids: str
     post_dt: str
     # post_tz: str
     post_creadt: str
@@ -189,7 +190,7 @@ class DotclearReader(BlogReader[DotclearSettings]):
         tags = self._get_tags(dc_post.post_meta, dc_post.post_title)
         categories = self._adapt_categories(dc_post, categories_dict)
         content = self._adapt_content(dc_post)
-        slug = pelican.utils.slugify(dc_post.post_title, regex_subs=subs)
+        slug = pelican.utils.slugify(dc_post.post_title, regex_subs=cast(list, subs))
         kind = "article"  # TODO: Recognise pages
         status = "published"  # TODO: Find a way for draft posts
 
