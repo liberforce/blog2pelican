@@ -3,7 +3,7 @@ from collections import defaultdict
 from collections.abc import Generator
 from typing import Any, Sequence, cast
 
-from blog2pelican.domain.adapters.blog_readers import create_blog_reader
+from blog2pelican.adapters.blog_readers import create_blog_reader
 from blog2pelican.domain.entities.posts import Post
 from blog2pelican.domain.entities.settings import (
     Settings,

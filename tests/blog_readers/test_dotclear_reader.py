@@ -1,4 +1,4 @@
-from blog2pelican.domain.adapters.blog_readers.dotclear import DotclearReader
+from blog2pelican.adapters.blog_readers.dotclear import DotclearReader
 from blog2pelican.domain.entities.posts import Post
 
 
