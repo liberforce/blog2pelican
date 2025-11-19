@@ -1,5 +1,5 @@
 import logging
-from collections.abc import Generator
+from collections.abc import Generator, Mapping
 from dataclasses import dataclass
 
 import pelican.utils
@@ -12,6 +12,8 @@ from blog2pelican.domain.ports.blog_reader import BlogReader
 from blog2pelican.helpers.pelican_format import pelican_format_datetime
 
 logger = logging.getLogger(__name__)
+
+subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
 
 
 @dataclass
@@ -144,11 +146,65 @@ class DotclearReader(BlogReader[DotclearSettings]):
 
         return dc_post
 
-    def _adapt_content(self, content: str) -> str:
+    def _adapt_escaped_content(self, content: str) -> str:
         # Unescape backquoted characters
         content = content.replace("\\n", "")
         content = content.replace("\\", "")
         return content
+
+    def _adapt_categories(
+        self,
+        dc_post: DotclearPost,
+        categories_dict: Mapping[str, str],
+    ) -> list[str]:
+        result = [
+            categories_dict[cat_id].strip()
+            for cat_id in dc_post.cat_ids.split(",")
+            if dc_post.cat_ids
+        ]
+        return result
+
+    def _adapt_content(self, dc_post: DotclearPost) -> str:
+        """
+        dotclear2 does not use markdown by default unless
+        you use the markdown plugin
+        Ref: http://plugins.dotaddict.org/dc2/details/formatting-markdown
+        """
+        if dc_post.post_format == "markdown":
+            result = dc_post.post_excerpt + dc_post.post_content
+        else:
+            result = dc_post.post_excerpt_xhtml + dc_post.post_content_xhtml
+            result = self._adapt_escaped_content(result)
+
+            dc_post.post_format = "html"
+
+        return result
+
+    def _adapt_post(
+        self,
+        dc_post: DotclearPost,
+        categories_dict: Mapping[str, str],
+    ) -> Post:
+        author = dc_post.user_id
+        tags = self._get_tags(dc_post.post_meta, dc_post.post_title)
+        categories = self._adapt_categories(dc_post, categories_dict)
+        content = self._adapt_content(dc_post)
+        slug = pelican.utils.slugify(dc_post.post_title, regex_subs=subs)
+        kind = "article"  # TODO: Recognise pages
+        status = "published"  # TODO: Find a way for draft posts
+
+        return Post(
+            dc_post.post_title,
+            content,
+            slug,
+            dc_post.post_dt,
+            author,
+            categories,
+            tags,
+            status,
+            kind,
+            dc_post.post_format,
+        )
 
     def read_posts(self, path: str) -> Generator[Post]:
         """Parse a Dotclear export file, and yield posts"""
@@ -156,43 +212,7 @@ class DotclearReader(BlogReader[DotclearSettings]):
 
         print(f"{len(raw_posts)} posts read.")
 
-        subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
         for raw_post in raw_posts:
             dc_post = self._parse_raw_post(raw_post)
-
-            author = dc_post.user_id
-            tags = self._get_tags(dc_post.post_meta, dc_post.post_title)
-            categories = [
-                categories_dict[cat_id].strip()
-                for cat_id in dc_post.cat_ids.split(",")
-                if dc_post.cat_ids
-            ]
-
-            """
-            dotclear2 does not use markdown by default unless
-            you use the markdown plugin
-            Ref: http://plugins.dotaddict.org/dc2/details/formatting-markdown
-            """
-            if dc_post.post_format == "markdown":
-                content = dc_post.post_excerpt + dc_post.post_content
-            else:
-                content = dc_post.post_excerpt_xhtml + dc_post.post_content_xhtml
-                content = self._adapt_content(content)
-
-                dc_post.post_format = "html"
-
-            kind = "article"  # TODO: Recognise pages
-            status = "published"  # TODO: Find a way for draft posts
-
-            yield Post(
-                dc_post.post_title,
-                content,
-                pelican.utils.slugify(dc_post.post_title, regex_subs=subs),
-                dc_post.post_dt,
-                author,
-                categories,
-                tags,
-                status,
-                kind,
-                dc_post.post_format,
-            )
+            post = self._adapt_post(dc_post, categories_dict)
+            yield post
