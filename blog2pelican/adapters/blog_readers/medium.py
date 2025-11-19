@@ -95,7 +95,7 @@ class MediumReader(BlogReader[MediumSettings]):
 
         # medium HTML export doesn't have tag or category
         # RSS feed has tags, but it doesn't have all the posts.
-        tags = ()
+        tags: list[str] = []
 
         slug = self.medium_slug(filepath)
 

@@ -6,10 +6,10 @@ class Post:
     title: str
     content: str
     filename: str
-    date: str
-    author: str
-    categories: list[str]
-    tags: list[str]
-    status: str
+    date: str | None
+    author: str | None
+    categories: list[str] | None
+    tags: list[str] | None
+    status: str | None
     kind: str
     markup: str
