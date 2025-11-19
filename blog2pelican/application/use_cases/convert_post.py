@@ -275,6 +275,9 @@ def get_output_data(
 
 
 class ConvertPostUseCase:
+    def __init__(self, pandoc=None):
+        self.pandoc = Pandoc() if pandoc is None else pandoc
+
     def convert(
         self,
         post: Post,
@@ -289,7 +292,6 @@ class ConvertPostUseCase:
         wp_attach=False,
         attachments=None,
     ):
-        pandoc = Pandoc()
         slug = (not disable_slugs and post.filename) or None
         assert slug is None or post.filename == os.path.basename(
             post.filename
@@ -319,7 +321,7 @@ class ConvertPostUseCase:
         # Convert content
         if post.markup in ("html", "wp-html"):
             with tempfile.TemporaryDirectory() as tmpdir:
-                post.content = pandoc.convert(
+                post.content = self.pandoc.convert(
                     post,
                     out_markup,
                     tmpdir,  # output_path,

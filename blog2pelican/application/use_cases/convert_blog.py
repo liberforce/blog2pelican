@@ -36,6 +36,9 @@ def get_filename(post_name, post_id):
 
 
 class ConvertBlogUseCase:
+    def __init__(self):
+        self.pandoc = Pandoc()
+
     def extract_posts(
         self,
         settings: Settings,
@@ -61,11 +64,10 @@ class ConvertBlogUseCase:
         if filter_author and filter_author != post.author:
             return
 
-        pandoc = Pandoc()
-        if is_pandoc_needed(post.markup) and not pandoc.version:
+        if is_pandoc_needed(post.markup) and not self.pandoc.version:
             raise MissingPandocError
 
-        pc = ConvertPostUseCase()
+        pc = ConvertPostUseCase(pandoc=self.pandoc)
         pc.convert(
             post,
             settings,
