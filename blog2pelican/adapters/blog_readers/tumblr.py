@@ -2,6 +2,7 @@ import datetime
 import json
 import urllib.request as urllib_request
 from collections.abc import Generator
+from typing import cast
 
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import SafeDatetime, slugify
@@ -40,7 +41,7 @@ class TumblrReader(BlogReader[TumblrSettings]):
                     or post.get("source_title")
                     or post.get("type").capitalize()
                 )
-                slug = post.get("slug") or slugify(title, regex_subs=subs)
+                slug = post.get("slug") or slugify(title, regex_subs=cast(list, subs))
                 tags = post.get("tags")
                 timestamp = post.get("timestamp")
                 date = SafeDatetime.fromtimestamp(
@@ -100,11 +101,11 @@ class TumblrReader(BlogReader[TumblrSettings]):
                         for player in post.get("player")
                     ]
                     # If there are no embeddable players, say so, once
-                    if len(players) > 0 and all(player is None for player in players):
-                        players = "<p>(This video isn't available anymore.)</p>\n"
+                    if players and all(player is None for player in players):
+                        str_players = "<p>(This video isn't available anymore.)</p>\n"
                     else:
-                        players = "\n".join(players)
-                    content = source + caption + players
+                        str_players = "\n".join([str(player) for player in players])
+                    content = source + caption + str_players
                 elif post_type == "answer":
                     title = post.get("question")
                     content = (
