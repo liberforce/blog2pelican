@@ -1,5 +1,6 @@
 import time
 from collections.abc import Generator
+from typing import cast
 
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import slugify
@@ -25,7 +26,7 @@ class FeedReader(BlogReader[FeedSettings]):
             author = entry.author if hasattr(entry, "author") else None
             tags = [e["term"] for e in entry.tags] if hasattr(entry, "tags") else None
 
-            slug = slugify(entry.title, regex_subs=subs)
+            slug = slugify(entry.title, regex_subs=cast(list, subs))
             kind = "article"
             yield Post(
                 entry.title,
