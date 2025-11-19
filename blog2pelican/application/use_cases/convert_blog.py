@@ -4,16 +4,16 @@ from collections.abc import Generator
 from typing import Any, Sequence, cast
 
 from blog2pelican.adapters.blog_readers import create_blog_reader
+from blog2pelican.application.use_cases.convert_post import (
+    ConvertPostUseCase,
+    download_attachments,
+)
 from blog2pelican.domain.entities.posts import Post
 from blog2pelican.domain.entities.settings import (
     Settings,
     WordPressSettings,
 )
 from blog2pelican.domain.ports.blog_reader import BlogReader
-from blog2pelican.domain.use_cases.convert_post import (
-    ConvertPostUseCase,
-    download_attachments,
-)
 from blog2pelican.helpers.pandoc import Pandoc
 from blog2pelican.helpers.soup import soup_from_xml_file
 
