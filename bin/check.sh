@@ -6,7 +6,7 @@ this_script_dir=$(realpath $(dirname "${this_script}"))
 toplevel_dir=$(realpath "${this_script_dir}/..")
 
 project="blog2pelican"
-mypy "${toplevel_dir}/${project}"
-ruff check --output-format=concise "${toplevel_dir}/${project}"
-isort "${toplevel_dir}/${project}"
-black "${toplevel_dir}/${project}"
+mypy --no-error-summary "${toplevel_dir}/${project}"
+ruff check --quiet --output-format=concise "${toplevel_dir}/${project}"
+isort --quiet "${toplevel_dir}/${project}"
+black --quiet "${toplevel_dir}/${project}"
