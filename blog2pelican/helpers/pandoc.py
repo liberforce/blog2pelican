@@ -44,6 +44,22 @@ class Pandoc:
     def supports(self, input_format):
         return input_format in ("html", "wp-html")
 
+    def _wrap_into_html(self, post: Post) -> str:
+        # Replace newlines with paragraphs wrapped with <p> so
+        # HTML is valid before conversion
+        if post.markup == "wp-html":
+            from blog2pelican.adapters.blog_readers.wordpress import (
+                WordPressReader,
+            )
+
+            html_content = WordPressReader.decode_wp_content(post.content)
+        else:
+            paragraphs = post.content.splitlines()
+            paragraphs = [f"<p>{p}</p>" for p in paragraphs]
+            html_content = "".join(paragraphs)
+
+        return html_content
+
     def convert(
         self,
         post: Post,
@@ -65,22 +81,8 @@ class Pandoc:
             encoding="utf-8",
         ) as fp:
             html_filename = fp.name
-            content = post.content
-
-            # Replace newlines with paragraphs wrapped with <p> so
-            # HTML is valid before conversion
-            if post.markup == "wp-html":
-                from blog2pelican.adapters.blog_readers.wordpress import (
-                    WordPressReader,
-                )
-
-                new_content = WordPressReader.decode_wp_content(content)
-            else:
-                paragraphs = content.splitlines()
-                paragraphs = [f"<p>{p}</p>" for p in paragraphs]
-                new_content = "".join(paragraphs)
-
-            fp.write(new_content)
+            html_content = self._wrap_into_html(post)
+            fp.write(html_content)
             fp.flush()  # avoid buffering, pandoc needs the file on disk
 
             if self.version < (2,):
