@@ -67,16 +67,20 @@ class Pandoc:
         out_filename: str,
         html_filename: str,
     ):
-        parse_raw = "--parse-raw" if not strip_raw else ""
-        wrap_none = "--wrap=none" if self.version >= (1, 16) else "--no-wrap"
-        cmd = 'pandoc --normalize {0} --from=html --to={1} {2} -o "{3}" "{4}"'
-        cmd = cmd.format(
-            parse_raw,
+        cmd = [
+            "pandoc",
+            "--normalize",
+            "--parse-raw" if not strip_raw else "",
+            "--from",
+            "html",
+            "--to",
             out_markup if out_markup != "markdown" else "gfm",
-            wrap_none,
+            "--wrap=none" if self.version >= (1, 16) else "--no-wrap",
+            "--output",
             out_filename,
             html_filename,
-        )
+        ]
+
         return cmd
 
     def _build_modern_pandoc_cmd(
@@ -86,14 +90,18 @@ class Pandoc:
         out_filename: str,
         html_filename: str,
     ):
-        from_arg = "--from html+raw_html" if not strip_raw else "--from html"
-        cmd = 'pandoc {0} --to={1}-smart --wrap=none -o "{2}" "{3}"'
-        cmd = cmd.format(
-            from_arg,
-            out_markup if out_markup != "markdown" else "gfm",
+        cmd = [
+            "pandoc",
+            "--from",
+            "html+raw_html" if not strip_raw else "html",
+            "--to",
+            (out_markup if out_markup != "markdown" else "gfm") + "-smart",
+            "--wrap",
+            "none",
+            "--output",
             out_filename,
             html_filename,
-        )
+        ]
         return cmd
 
     def _build_pandoc_cmd(
@@ -148,7 +156,7 @@ class Pandoc:
             )
 
             try:
-                rc = subprocess.call(cmd, shell=True)
+                rc = subprocess.call(cmd)
                 if rc < 0:
                     error = f"Child was terminated by signal {-rc}"
                     sys.exit(error)
