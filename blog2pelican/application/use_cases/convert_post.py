@@ -282,7 +282,6 @@ class ConvertPostUseCase:
         post: Post,
         settings: Settings,
         output_path,
-        tmpdir: str | None = None,
         dircat=False,
         strip_raw=False,
         disable_slugs=False,
