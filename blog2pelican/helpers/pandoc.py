@@ -1,5 +1,4 @@
 import logging
-import os.path
 import subprocess
 import sys
 import tempfile
@@ -123,6 +122,20 @@ class Pandoc:
             html_filename,
         )
 
+    def _run_pandoc_cmd(self, cmd):
+        try:
+            rc = subprocess.call(cmd)
+            if rc < 0:
+                error = f"Child was terminated by signal {-rc}"
+                sys.exit(error)
+
+            elif rc > 0:
+                error = "Please, check your Pandoc installation."
+                sys.exit(error)
+        except OSError as e:
+            error = f"Pandoc execution failed: {e}"
+            sys.exit(error)
+
     def convert(
         self,
         post: Post,
@@ -154,19 +167,7 @@ class Pandoc:
                 out_filename,
                 html_filename,
             )
-
-            try:
-                rc = subprocess.call(cmd)
-                if rc < 0:
-                    error = f"Child was terminated by signal {-rc}"
-                    sys.exit(error)
-
-                elif rc > 0:
-                    error = "Please, check your Pandoc installation."
-                    sys.exit(error)
-            except OSError as e:
-                error = f"Pandoc execution failed: {e}"
-                sys.exit(error)
+            self._run_pandoc_cmd(cmd)
 
         with open(out_filename, "r", encoding="utf-8") as fs:
             content = fs.read()
