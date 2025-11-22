@@ -60,6 +60,61 @@ class Pandoc:
 
         return html_content
 
+    def _build_legacy_pandoc_cmd(
+        self,
+        out_markup: str,
+        strip_raw: bool,
+        out_filename: str,
+        html_filename: str,
+    ):
+        parse_raw = "--parse-raw" if not strip_raw else ""
+        wrap_none = "--wrap=none" if self.version >= (1, 16) else "--no-wrap"
+        cmd = 'pandoc --normalize {0} --from=html --to={1} {2} -o "{3}" "{4}"'
+        cmd = cmd.format(
+            parse_raw,
+            out_markup if out_markup != "markdown" else "gfm",
+            wrap_none,
+            out_filename,
+            html_filename,
+        )
+        return cmd
+
+    def _build_modern_pandoc_cmd(
+        self,
+        out_markup: str,
+        strip_raw: bool,
+        out_filename: str,
+        html_filename: str,
+    ):
+        from_arg = "--from html+raw_html" if not strip_raw else "--from html"
+        cmd = 'pandoc {0} --to={1}-smart --wrap=none -o "{2}" "{3}"'
+        cmd = cmd.format(
+            from_arg,
+            out_markup if out_markup != "markdown" else "gfm",
+            out_filename,
+            html_filename,
+        )
+        return cmd
+
+    def _build_pandoc_cmd(
+        self,
+        out_markup: str,
+        strip_raw: bool,
+        out_filename: str,
+        html_filename: str,
+    ) -> str:
+        if self.version < (2,):
+            build_pandoc_cmd = self._build_legacy_pandoc_cmd
+        else:
+            build_pandoc_cmd = self._build_modern_pandoc_cmd
+
+        return build_pandoc_cmd(
+            out_markup,
+            strip_raw,
+            out_filename,
+            html_filename,
+        )
+
     def convert(
         self,
         post: Post,
@@ -85,26 +140,12 @@ class Pandoc:
             fp.write(html_content)
             fp.flush()  # avoid buffering, pandoc needs the file on disk
 
-            if self.version < (2,):
-                parse_raw = "--parse-raw" if not strip_raw else ""
-                wrap_none = "--wrap=none" if self.version >= (1, 16) else "--no-wrap"
-                cmd = 'pandoc --normalize {0} --from=html --to={1} {2} -o "{3}" "{4}"'
-                cmd = cmd.format(
-                    parse_raw,
-                    out_markup if out_markup != "markdown" else "gfm",
-                    wrap_none,
-                    out_filename,
-                    html_filename,
-                )
-            else:
-                from_arg = "--from html+raw_html" if not strip_raw else "--from html"
-                cmd = 'pandoc {0} --to={1}-smart --wrap=none -o "{2}" "{3}"'
-                cmd = cmd.format(
-                    from_arg,
-                    out_markup if out_markup != "markdown" else "gfm",
-                    out_filename,
-                    html_filename,
-                )
+            cmd = self._build_pandoc_cmd(
+                out_markup,
+                strip_raw,
+                out_filename,
+                html_filename,
+            )
 
             try:
                 rc = subprocess.call(cmd, shell=True)
