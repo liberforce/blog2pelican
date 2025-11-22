@@ -47,7 +47,7 @@ class Pandoc:
         self,
         post: Post,
         out_markup,
-        output_path,
+        tmpdir,
         strip_raw,
         wp_attach,
         links,
@@ -59,7 +59,7 @@ class Pandoc:
         if not self.supports(post.markup):
             return
 
-        html_filename = os.path.join(output_path, post.filename + ".html")
+        html_filename = os.path.join(tmpdir, post.filename + ".html")
         content = post.content
 
         with open(html_filename, "w", encoding="utf-8") as fp:
