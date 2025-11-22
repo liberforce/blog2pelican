@@ -1,4 +1,5 @@
 import logging
+import tempfile
 from collections import defaultdict
 from collections.abc import Generator
 from typing import Any, Sequence, cast
@@ -52,6 +53,7 @@ class ConvertBlogUseCase:
         post: Post,
         settings: Settings,
         output_path,
+        pandoc_tmpdir: str | None = None,
         dircat=False,
         strip_raw=False,
         disable_slugs=False,
@@ -72,6 +74,7 @@ class ConvertBlogUseCase:
             post,
             settings,
             output_path,
+            pandoc_tmpdir,
             dircat,
             strip_raw,
             disable_slugs,
@@ -141,24 +144,25 @@ class ConvertBlogUseCase:
         attachments,
     ):
         posts_require_pandoc = []
-
-        for post in posts:
-            try:
-                self.convert_post(
-                    post,
-                    settings,
-                    args.output,
-                    dircat=args.dircat or False,
-                    dirpage=args.dirpage or False,
-                    strip_raw=args.strip_raw or False,
-                    disable_slugs=args.disable_slugs or False,
-                    filter_author=args.author,
-                    wp_custpost=args.wp_custpost or False,
-                    wp_attach=args.wp_attach or False,
-                    attachments=attachments or None,
-                )
-            except MissingPandocError:
-                posts_require_pandoc.append(post.filename)
+        with tempfile.TemporaryDirectory() as pandoc_tmpdir:
+            for post in posts:
+                try:
+                    self.convert_post(
+                        post,
+                        settings,
+                        args.output,
+                        pandoc_tmpdir,
+                        dircat=args.dircat or False,
+                        dirpage=args.dirpage or False,
+                        strip_raw=args.strip_raw or False,
+                        disable_slugs=args.disable_slugs or False,
+                        filter_author=args.author,
+                        wp_custpost=args.wp_custpost or False,
+                        wp_attach=args.wp_attach or False,
+                        attachments=attachments or None,
+                    )
+                except MissingPandocError:
+                    posts_require_pandoc.append(post.filename)
 
         if posts_require_pandoc:
             logger.error(

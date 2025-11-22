@@ -2,7 +2,6 @@ import logging
 import os.path
 import re
 import sys
-import tempfile
 from urllib.error import URLError
 from urllib.parse import quote, urlparse, urlsplit, urlunsplit
 from urllib.request import urlretrieve
@@ -283,6 +282,7 @@ class ConvertPostUseCase:
         post: Post,
         settings: Settings,
         output_path,
+        tmpdir: str | None = None,
         dircat=False,
         strip_raw=False,
         disable_slugs=False,
@@ -320,17 +320,16 @@ class ConvertPostUseCase:
 
         # Convert content
         if post.markup in ("html", "wp-html"):
-            with tempfile.TemporaryDirectory() as tmpdir:
-                post.content = self.pandoc.convert(
-                    post,
-                    out_markup,
-                    tmpdir,  # output_path,
-                    strip_raw,
-                    wp_attach,
-                    links,
-                    out_filename,
-                )
-                post.markup = out_markup
+            post.content = self.pandoc.convert(
+                post,
+                out_markup,
+                tmpdir,
+                strip_raw,
+                wp_attach,
+                links,
+                out_filename,
+            )
+            post.markup = out_markup
 
         with open(out_filename, "w", encoding="utf-8") as fs:
             fs.write(header + post.content)
