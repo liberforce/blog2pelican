@@ -90,7 +90,7 @@ class Pandoc:
                 html_filename,
             )
         else:
-            from_arg = "-f html+raw_html" if not strip_raw else "-f html"
+            from_arg = "--from html+raw_html" if not strip_raw else "--from html"
             cmd = 'pandoc {0} --to={1}-smart --wrap=none -o "{2}" "{3}"'
             cmd = cmd.format(
                 from_arg,
