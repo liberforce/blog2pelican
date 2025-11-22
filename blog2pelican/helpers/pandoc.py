@@ -46,12 +46,12 @@ class Pandoc:
     def convert(
         self,
         post: Post,
-        out_markup,
-        tmpdir,
-        strip_raw,
-        wp_attach,
-        links,
-        out_filename,
+        out_markup: str,
+        tmpdir: str,
+        strip_raw: bool,
+        wp_attach: bool,
+        links: dict[str, str],
+        out_filename: str,
     ):
         """
         Convert text from one markup language to another.

@@ -176,7 +176,7 @@ def get_out_filename(
     return out_filename
 
 
-def download_attachments(output_path, urls):
+def download_attachments(output_path: str, urls: list[str]) -> dict[str, str]:
     """Downloads WordPress attachments and returns a list of paths to
     attachments that can be associated with a post (relative path to output
     directory). Files that fail to download, will not be added to posts"""
@@ -185,8 +185,8 @@ def download_attachments(output_path, urls):
         path = urlparse(url).path
         # teardown path and rebuild to negate any errors with
         # os.path.join and leading /'s
-        path = path.split("/")
-        filename = path.pop(-1)
+        path_components = path.split("/")
+        filename = path_components.pop(-1)
         localpath = ""
         for item in path:
             if sys.platform != "win32" or ":" not in item:
