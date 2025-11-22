@@ -1,5 +1,11 @@
 #! /bin/bash
 
 # Run pandoc from a docker container
-docker run --rm --volume "/tmp:/tmp" --volume "$(pwd):/data" --user $(id -u):$(id -g) pandoc/core "$@"
+CONTAINER_NAME="pandoc_instance"
+
+if ! docker ps --filter "name=${CONTAINER_NAME}" --filter "status=running" | grep --quiet "${CONTAINER_NAME}"; then
+    docker run --detach --name pandoc_instance --volume "$(pwd):/data" --volume "/tmp:/tmp" --user $(id -u):$(id -g) --entrypoint /bin/sleep pandoc/core infinity
+fi
+
+docker exec "${CONTAINER_NAME}" pandoc "$@"
 
