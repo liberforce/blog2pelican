@@ -2,6 +2,7 @@ import logging
 import os.path
 import subprocess
 import sys
+import tempfile
 
 from blog2pelican.domain.entities.posts import Post
 
@@ -47,7 +48,6 @@ class Pandoc:
         self,
         post: Post,
         out_markup: str,
-        tmpdir: str,
         strip_raw: bool,
         wp_attach: bool,
         links: dict[str, str],
@@ -59,10 +59,14 @@ class Pandoc:
         if not self.supports(post.markup):
             return
 
-        html_filename = os.path.join(tmpdir, post.filename + ".html")
-        content = post.content
+        with tempfile.NamedTemporaryFile(
+            "w",
+            suffix=".html",
+            encoding="utf-8",
+        ) as fp:
+            html_filename = fp.name
+            content = post.content
 
-        with open(html_filename, "w", encoding="utf-8") as fp:
             # Replace newlines with paragraphs wrapped with <p> so
             # HTML is valid before conversion
             if post.markup == "wp-html":
@@ -77,42 +81,41 @@ class Pandoc:
                 new_content = "".join(paragraphs)
 
             fp.write(new_content)
+            fp.flush()  # avoid buffering, pandoc needs the file on disk
 
-        if self.version < (2,):
-            parse_raw = "--parse-raw" if not strip_raw else ""
-            wrap_none = "--wrap=none" if self.version >= (1, 16) else "--no-wrap"
-            cmd = 'pandoc --normalize {0} --from=html --to={1} {2} -o "{3}" "{4}"'
-            cmd = cmd.format(
-                parse_raw,
-                out_markup if out_markup != "markdown" else "gfm",
-                wrap_none,
-                out_filename,
-                html_filename,
-            )
-        else:
-            from_arg = "--from html+raw_html" if not strip_raw else "--from html"
-            cmd = 'pandoc {0} --to={1}-smart --wrap=none -o "{2}" "{3}"'
-            cmd = cmd.format(
-                from_arg,
-                out_markup if out_markup != "markdown" else "gfm",
-                out_filename,
-                html_filename,
-            )
+            if self.version < (2,):
+                parse_raw = "--parse-raw" if not strip_raw else ""
+                wrap_none = "--wrap=none" if self.version >= (1, 16) else "--no-wrap"
+                cmd = 'pandoc --normalize {0} --from=html --to={1} {2} -o "{3}" "{4}"'
+                cmd = cmd.format(
+                    parse_raw,
+                    out_markup if out_markup != "markdown" else "gfm",
+                    wrap_none,
+                    out_filename,
+                    html_filename,
+                )
+            else:
+                from_arg = "--from html+raw_html" if not strip_raw else "--from html"
+                cmd = 'pandoc {0} --to={1}-smart --wrap=none -o "{2}" "{3}"'
+                cmd = cmd.format(
+                    from_arg,
+                    out_markup if out_markup != "markdown" else "gfm",
+                    out_filename,
+                    html_filename,
+                )
 
-        try:
-            rc = subprocess.call(cmd, shell=True)
-            if rc < 0:
-                error = f"Child was terminated by signal {-rc}"
+            try:
+                rc = subprocess.call(cmd, shell=True)
+                if rc < 0:
+                    error = f"Child was terminated by signal {-rc}"
+                    sys.exit(error)
+
+                elif rc > 0:
+                    error = "Please, check your Pandoc installation."
+                    sys.exit(error)
+            except OSError as e:
+                error = f"Pandoc execution failed: {e}"
                 sys.exit(error)
-
-            elif rc > 0:
-                error = "Please, check your Pandoc installation."
-                sys.exit(error)
-        except OSError as e:
-            error = f"Pandoc execution failed: {e}"
-            sys.exit(error)
-
-        os.remove(html_filename)
 
         with open(out_filename, "r", encoding="utf-8") as fs:
             content = fs.read()

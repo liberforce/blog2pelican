@@ -323,7 +323,6 @@ class ConvertPostUseCase:
             post.content = self.pandoc.convert(
                 post,
                 out_markup,
-                tmpdir,
                 strip_raw,
                 wp_attach,
                 links,
