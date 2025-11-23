@@ -1,0 +1,11 @@
+///DOTCLEAR|2.1.5|single
+
+[category cat_id,blog_id,cat_title,cat_url,cat_desc,cat_position,cat_lft,cat_rgt]
+"15948","f17b77e426fa46cb925b4f2951cf7627","Life / Vie quotidienne","Life-Vie-quotidienne","","10490","2","3"
+"15949","f17b77e426fa46cb925b4f2951cf7627","Gossip / Blabla","Gossip-Blabla","","10491","4","5"
+"15950","f17b77e426fa46cb925b4f2951cf7627","Computers / Informatique","Computers-Informatique","","10492","6","7"
+"15951","f17b77e426fa46cb925b4f2951cf7627","Ecology  / Ecologie","Ecology-Ecologie","","10493","8","9"
+"15952","f17b77e426fa46cb925b4f2951cf7627","Politics / Politique","Politics-Politique","","10494","10","11"
+
+[post post_id,blog_id,user_id,cat_id,post_dt,post_tz,post_creadt,post_upddt,post_password,post_type,post_format,post_url,post_lang,post_title,post_excerpt,post_excerpt_xhtml,post_content,post_content_xhtml,post_notes,post_words,post_meta,post_status,post_selected,post_open_comment,post_open_tb,nb_comment,nb_trackback,post_position]
+"506846","f17b77e426fa46cb925b4f2951cf7627","LM2153-GANDI","15950","2010-04-07 16:08:00","Europe/Paris","2010-04-07 14:08:14","2010-04-07 14:10:08","","post","xhtml","2010/04/07/You-like-Linux-Tell-it-to-the-world-!","fr","You like Linux ? Tell it to the world !","","","<p>Help gather some stats and reach the 1,000,000 people who like Linux and Open Source Software. It takes 30 seconds to fill the form on <a href=\"http://1-million-tux.linux-befehle.org\">The million Tux</a>.</p>","<p>Help gather some stats and reach the 1,000,000 people who like Linux and\nOpen Source Software. It takes 30 seconds to fill the form on <a href=\"http://1-million-tux.linux-befehle.org\">The million Tux</a>.</p>","","you like linux tell the world help gather some stats and reach the 000 000 people who like linux and open source software takes seconds fill the form the million tux","a:1:{s:3:\"tag\";a:1:{i:0;s:5:\"linux\";}}","1","0","1","1","1","0","0"

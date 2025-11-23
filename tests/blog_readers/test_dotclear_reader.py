@@ -64,3 +64,25 @@ def test_embedded_image():
     )
 
     assert actual == expected
+
+
+def test_long_line():
+    reader = DotclearReader()
+    posts = reader.read_posts(
+        "tests/data/dotclear/standalone/posts/you-like-linux-tell-it-to-the-world.txt"
+    )
+    actual = next(posts)
+    expected = Post(
+        title="You like Linux ? Tell it to the world !",
+        content='<p>Help gather some stats and reach the 1,000,000 people who like Linux and\nOpen Source Software. It takes 30 seconds to fill the form on <a href="http://1-million-tux.linux-befehle.org">The million Tux</a>.</p>',
+        filename="you-like-linux-tell-it-to-the-world",
+        date="2010-04-07 16:08",
+        author="LM2153-GANDI",
+        categories=["Computers / Informatique"],
+        tags=["linux"],
+        status="published",
+        kind="article",
+        markup="html",
+    )
+
+    assert actual == expected
