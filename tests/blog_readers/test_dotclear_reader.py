@@ -30,7 +30,7 @@ def test_shortest_post():
     actual = next(posts)
     expected = Post(
         title="Favorite command after a clean Mandriva Install...",
-        content="<pre>urpme -a mono</pre>",
+        content="<pre>\nurpme -a mono\n</pre>",
         filename="favorite-command-after-a-clean-mandriva-install",
         date="2008-03-26 00:48",
         author="LM2153-GANDI",

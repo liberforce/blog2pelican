@@ -149,9 +149,10 @@ class DotclearReader(BlogReader[DotclearSettings]):
 
     def _adapt_escaped_content(self, content: str) -> str:
         # Unescape backquoted characters
-        content = content.replace("\\n", "")
-        content = content.replace("\\", "")
-        return content
+        result = content
+        result = result.replace("\\n", "\n")
+        result = result.replace("\\", "")
+        return result
 
     def _adapt_categories(
         self,
