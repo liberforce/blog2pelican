@@ -6,4 +6,4 @@ from .base import Settings
 
 @dataclass
 class DotclearSettings(Settings):
-    origin: Literal["dotclear"]
+    engine: Literal["dotclear"]

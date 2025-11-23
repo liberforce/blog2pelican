@@ -6,7 +6,7 @@ from .base import Settings
 
 @dataclass
 class WordPressSettings(Settings):
-    origin: Literal["wordpress"]
+    engine: Literal["wordpress"]
 
     """Put pages in pages subdirectories"""
     dirpage: bool  # Blogger & WordPress only

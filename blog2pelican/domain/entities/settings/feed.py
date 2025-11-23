@@ -6,4 +6,4 @@ from .base import Settings
 
 @dataclass
 class FeedSettings(Settings):
-    origin: Literal["feed"]
+    engine: Literal["feed"]

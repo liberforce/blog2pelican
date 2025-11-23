@@ -62,7 +62,7 @@ class ConvertBlogUseCase:
         self,
         settings: Settings,
     ) -> Generator[Post]:
-        blog_reader: BlogReader = create_blog_reader(settings.origin)
+        blog_reader: BlogReader = create_blog_reader(settings.engine)
         blog_reader.use_settings(settings)
         return blog_reader.read_posts(settings.input)
 
@@ -114,7 +114,7 @@ class ConvertBlogUseCase:
 
         Each post has list of the attachment_urls.
         """
-        if settings.origin != "wordpress":
+        if settings.engine != "wordpress":
             return None
 
         s = cast(WordPressSettings, settings)

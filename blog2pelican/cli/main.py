@@ -19,7 +19,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     subparsers = parser.add_subparsers(
-        dest="origin",
+        dest="engine",
         help="Blog engine-specific conversion options",
     )
 

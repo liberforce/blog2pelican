@@ -10,7 +10,7 @@ class Settings:
     """
 
     """Origin of the blog to import"""
-    origin: Literal[
+    engine: Literal[
         "blogger",
         "dotclear",
         "medium",
@@ -35,4 +35,4 @@ class Settings:
     dircat: bool
 
     def check(self):
-        """Check if the settings are consistent for the selected origin"""
+        """Check if the settings are consistent for the selected engine"""

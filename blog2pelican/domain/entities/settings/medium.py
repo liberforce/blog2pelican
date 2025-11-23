@@ -6,4 +6,4 @@ from .base import Settings
 
 @dataclass
 class MediumSettings(Settings):
-    origin: Literal["medium"]
+    engine: Literal["medium"]
