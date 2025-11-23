@@ -58,9 +58,10 @@ def build_argument_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
-        "--filter-author",
-        dest="author",
-        help="Import only post from the specified author",
+        "--allow-author",
+        action="append",
+        dest="allowed_authors",
+        help="Import only posts from the specified author. Use multiple times to allow multiple authors.",
     )
     parser.add_argument(
         "--strip-raw",

@@ -28,7 +28,7 @@ class Settings:
     markup: Literal["rst", "markdown"]
 
     """Author whose posts to import, or None to select all"""
-    author: str | None
+    allowed_authors: list[str] | None
 
     """Put files in directories with categories name"""
     dircat: bool
