@@ -23,7 +23,14 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(dest="input", help="The input file to read")
     parser.add_argument(
         "--origin",
-        choices=["blogger", "dotclear", "medium", "tumblr", "wordpress", "feed"],
+        choices=[
+            "blogger",
+            "dotclear",
+            "medium",
+            "tumblr",
+            "wordpress",
+            "feed",
+        ],
         action="store",
         help="Origin of the file to import",
     )
