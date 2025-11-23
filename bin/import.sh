@@ -5,4 +5,4 @@ this_script_dir=$(realpath $(dirname "${this_script}"))
 
 export PATH="${PATH}:${this_script_dir}"
 
-pelican-import --dotclear --markup markdown "$@"
+pelican-import dotclear --markup markdown "$@"

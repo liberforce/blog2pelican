@@ -2,7 +2,7 @@ import logging
 import tempfile
 from collections import defaultdict
 from collections.abc import Generator
-from typing import Any, Sequence, cast
+from typing import Sequence, cast
 
 from blog2pelican.adapters.blog_readers import create_blog_reader
 from blog2pelican.application.use_cases.convert_post import (
@@ -140,9 +140,9 @@ class ConvertBlogUseCase:
         self,
         posts: Sequence[Post],
         settings: Settings,
-        args: Any,
         attachments,
     ):
+        args = vars(settings)
         posts_require_pandoc = []
         with tempfile.TemporaryDirectory() as pandoc_tmpdir:
             for post in posts:
@@ -150,15 +150,15 @@ class ConvertBlogUseCase:
                     self.convert_post(
                         post,
                         settings,
-                        args.output_dir,
+                        settings.output_dir,
                         pandoc_tmpdir,
-                        dircat=args.dircat or False,
-                        dirpage=args.dirpage or False,
-                        strip_raw=args.strip_raw or False,
-                        disable_slugs=args.disable_slugs or False,
-                        allowed_authors=args.allowed_authors,
-                        wp_custpost=args.wp_custpost or False,
-                        wp_attach=args.wp_attach or False,
+                        dircat=args.get("dircat", False),
+                        dirpage=args.get("dirpage", False),
+                        strip_raw=args.get("strip_raw", False),
+                        disable_slugs=args.get("disable_slugs", False),
+                        allowed_authors=settings.allowed_authors,
+                        wp_custpost=args.get("wp_custpost", False),
+                        wp_attach=args.get("wp_attach", False),
                         attachments=attachments or None,
                     )
                 except MissingPandocError:

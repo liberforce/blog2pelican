@@ -20,78 +20,88 @@ def build_argument_parser() -> argparse.ArgumentParser:
         "Be sure to have pandoc installed.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
+    subparsers = parser.add_subparsers(
+        dest="origin",
+        help="Blog engine-specific conversion options",
+    )
 
-    parser.add_argument(dest="input", help="The input file to read")
-    parser.add_argument(
-        "--origin",
-        choices=[
-            "blogger",
-            "dotclear",
-            "medium",
-            "tumblr",
-            "wordpress",
-            "feed",
-        ],
-        action="store",
-        help="Origin of the file to import",
-    )
-    parser.add_argument(
-        "-o",
-        "--output",
-        dest="output_dir",
-        type=pathlib.Path,
-        default="content",
-        help="Output directory",
-    )
-    parser.add_argument(
-        "-m",
-        "--markup",
-        choices=["rst", "markdown"],
-        dest="markup",
-        default="rst",
-        help="Output markup format",
-    )
-    parser.add_argument(
-        "--dir-cat",
-        action="store_true",
-        dest="dircat",
-        help="Put files in directories with categories name",
-    )
-    parser.add_argument(
-        "--dir-page",
-        action="store_true",
-        dest="dirpage",
-        help=(
-            'Put files recognised as pages in "pages/" sub-directory'
-            " (blogger and wordpress import only)"
-        ),
-    )
-    parser.add_argument(
-        "--allow-author",
-        action="append",
-        dest="allowed_authors",
-        help="Import only posts from the specified author. Use multiple times to allow multiple authors.",
-    )
-    parser.add_argument(
+    parsers = {}
+    for engine in [
+        "dotclear",
+        "blogger",
+        "medium",
+        "tumblr",
+        "wordpress",
+        "feed",
+    ]:
+        parsers[engine] = subparsers.add_parser(engine)
+        parsers[engine].add_argument(dest="input", help="The input file to read")
+        parsers[engine].add_argument(
+            "-o",
+            "--output",
+            dest="output_dir",
+            type=pathlib.Path,
+            default="content",
+            help="Output directory",
+        )
+        parsers[engine].add_argument(
+            "-m",
+            "--markup",
+            choices=["rst", "markdown"],
+            dest="markup",
+            default="rst",
+            help="Output markup format",
+        )
+        parsers[engine].add_argument(
+            "--dir-cat",
+            action="store_true",
+            dest="dircat",
+            help="Put files in directories with categories name",
+        )
+        parsers[engine].add_argument(
+            "--allow-author",
+            action="append",
+            dest="allowed_authors",
+            help="Import only posts from the specified author. "
+            "Use multiple times to allow multiple authors.",
+        )
+        parsers[engine].add_argument(
+            "--disable-slugs",
+            action="store_true",
+            dest="disable_slugs",
+            help="Disable storing slugs from imported posts within output. "
+            "With this disabled, your Pelican URLs may not be consistent "
+            "with your original posts.",
+        )
+
+    for engine in ["blogger", "wordpress"]:
+        parsers[engine].add_argument(
+            "--dir-page",
+            action="store_true",
+            dest="dirpage",
+            help=('Put files recognised as pages in "pages/" sub-directory'),
+        )
+
+    parsers["wordpress"].add_argument(
         "--strip-raw",
         action="store_true",
         dest="strip_raw",
         help="Strip raw HTML code that can't be converted to "
         "markup such as flash embeds or iframes (wordpress import only)",
     )
-    parser.add_argument(
+    parsers["wordpress"].add_argument(
         "--wp-custpost",
         action="store_true",
         dest="wp_custpost",
         help="Put wordpress custom post types in directories. If used with "
         "--dir-cat option directories will be created as "
-        "/post_type/category/ (wordpress import only)",
+        "/post_type/category/",
     )
-    parser.add_argument(
+    parsers["wordpress"].add_argument(
         "--wp-attach",
         action="store_true",
         dest="wp_attach",
-        help="(wordpress import only) Download files uploaded to wordpress as "
+        help="Download files uploaded to wordpress as "
         "attachments. Files will be added to posts as a list in the post "
         "header. All files will be downloaded, even if "
         "they aren't associated with a post. Files will be downloaded "
@@ -99,19 +109,11 @@ def build_argument_parser() -> argparse.ArgumentParser:
         "e.g. output/wp-uploads/date/postname/file.jpg "
         "-- Requires an internet connection --",
     )
-    parser.add_argument(
-        "--disable-slugs",
-        action="store_true",
-        dest="disable_slugs",
-        help="Disable storing slugs from imported posts within output. "
-        "With this disabled, your Pelican URLs may not be consistent "
-        "with your original posts.",
-    )
-    parser.add_argument(
+    parsers["tumblr"].add_argument(
         "-b",
         "--blogname",
         dest="blogname",
-        help="Blog name (Tumblr import only)",
+        help="Blog name",
     )
     return parser
 
@@ -138,7 +140,7 @@ def main():
     posts = bc.extract_posts(settings)
     create_output_dir_if_required(settings.output_dir)
     attachments = bc.extract_attachments(settings)
-    bc.convert(posts, settings, args, attachments)
+    bc.convert(posts, settings, attachments)
 
 
 if __name__ == "__main__":
