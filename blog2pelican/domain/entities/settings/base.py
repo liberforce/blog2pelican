@@ -1,3 +1,4 @@
+import pathlib
 from dataclasses import dataclass
 from typing import Literal
 
@@ -22,7 +23,7 @@ class Settings:
     input: str
 
     """Output path for generated imported files"""
-    output: str  # FIXME: use type for files/dirs
+    output_dir: pathlib.Path
 
     """Markup format to use in output"""
     markup: Literal["rst", "markdown"]

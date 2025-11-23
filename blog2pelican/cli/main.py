@@ -2,6 +2,7 @@
 import argparse
 import logging
 import os
+import pathlib
 import sys
 
 import pelican.log
@@ -37,9 +38,10 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-o",
         "--output",
-        dest="output",
+        dest="output_dir",
+        type=pathlib.Path,
         default="content",
-        help="Output path",
+        help="Output directory",
     )
     parser.add_argument(
         "-m",
@@ -134,7 +136,7 @@ def main():
 
     bc = ConvertBlogUseCase()
     posts = bc.extract_posts(settings)
-    create_output_dir_if_required(settings.output)
+    create_output_dir_if_required(settings.output_dir)
     attachments = bc.extract_attachments(settings)
     bc.convert(posts, settings, args, attachments)
 

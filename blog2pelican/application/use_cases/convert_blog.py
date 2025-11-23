@@ -150,7 +150,7 @@ class ConvertBlogUseCase:
                     self.convert_post(
                         post,
                         settings,
-                        args.output,
+                        args.output_dir,
                         pandoc_tmpdir,
                         dircat=args.dircat or False,
                         dirpage=args.dirpage or False,
