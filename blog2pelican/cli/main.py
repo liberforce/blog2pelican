@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import logging
-import os
 import pathlib
-import sys
 
 import pelican.log
 
@@ -118,15 +116,6 @@ def build_argument_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def create_output_dir_if_required(dirname: str):
-    if not os.path.exists(dirname):
-        try:
-            os.mkdir(dirname)
-        except OSError:
-            error = "Unable to create the output folder: " + dirname
-            sys.exit(error)
-
-
 def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
@@ -136,11 +125,8 @@ def main():
     # logging.setLoggerClass has to be called before logging.getLogger
     pelican.log.init()
 
-    bc = ConvertBlogUseCase()
-    posts = bc.extract_posts(settings)
-    create_output_dir_if_required(settings.output_dir)
-    attachments = bc.extract_attachments(settings)
-    bc.convert(posts, settings, attachments)
+    uc = ConvertBlogUseCase()
+    uc.convert_blog(settings)
 
 
 if __name__ == "__main__":

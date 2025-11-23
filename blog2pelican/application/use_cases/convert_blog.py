@@ -1,8 +1,11 @@
 import logging
+import os
+import pathlib
+import sys
 import tempfile
 from collections import defaultdict
-from collections.abc import Generator
-from typing import Sequence, cast
+from collections.abc import Generator, Iterable
+from typing import cast
 
 from blog2pelican.adapters.blog_readers import create_blog_reader
 from blog2pelican.application.use_cases.convert_post import (
@@ -36,9 +39,24 @@ def get_filename(post_name, post_id):
         return post_name
 
 
+def create_output_dir_if_required(dirname: str | pathlib.Path):
+    if not os.path.exists(dirname):
+        try:
+            os.mkdir(dirname)
+        except OSError:
+            error = f"Unable to create the output folder: {dirname}"
+            sys.exit(error)
+
+
 class ConvertBlogUseCase:
     def __init__(self):
         self.pandoc = Pandoc()
+
+    def convert_blog(self, settings: Settings):
+        posts = self.extract_posts(settings)
+        create_output_dir_if_required(settings.output_dir)
+        attachments = self.extract_attachments(settings)
+        self.convert(posts, settings, attachments)
 
     def extract_posts(
         self,
@@ -138,7 +156,7 @@ class ConvertBlogUseCase:
 
     def convert(
         self,
-        posts: Sequence[Post],
+        posts: Iterable[Post],
         settings: Settings,
         attachments,
     ):
