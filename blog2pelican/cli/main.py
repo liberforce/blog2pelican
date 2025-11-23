@@ -119,7 +119,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
 def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
-    settings = create_settings(args.origin, args)
+    settings = create_settings(vars(args))
     settings.check()
 
     # logging.setLoggerClass has to be called before logging.getLogger

@@ -19,9 +19,9 @@ _class_map = {
 }
 
 
-def create_settings(origin: str, args: Mapping[str, Any]):
+def create_settings(args: Mapping[str, Any]):
     """Factory to create the right set of options for chosen blog type."""
-    cls = _class_map.get(origin, Settings)
+    cls = _class_map.get(args["origin"], Settings)
     fields = [f.name for f in dataclasses.fields(cls)]
-    allowed = {k: v for k, v in vars(args).items() if k in fields}
+    allowed = {k: v for k, v in args.items() if k in fields}
     return cls(**allowed)
