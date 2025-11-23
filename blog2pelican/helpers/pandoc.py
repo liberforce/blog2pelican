@@ -52,6 +52,8 @@ class Pandoc:
             )
 
             html_content = WordPressReader.decode_wp_content(post.content)
+        elif post.markup in ["xhtml", "html"]:
+            html_content = post.content
         else:
             paragraphs = post.content.splitlines()
             paragraphs = [f"<p>{p}</p>" for p in paragraphs]
