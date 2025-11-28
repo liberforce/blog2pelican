@@ -3,9 +3,56 @@
 # Run pandoc from a docker container
 CONTAINER_NAME="pandoc_instance"
 
-if ! docker ps --filter "name=${CONTAINER_NAME}" --filter "status=running" | grep --quiet "${CONTAINER_NAME}"; then
-    docker run --detach --name pandoc_instance --volume "$(pwd):/data" --volume "/tmp:/tmp" --user $(id -u):$(id -g) --entrypoint /bin/sleep pandoc/core infinity
-fi
+function start_container {
+    local container_name="$1"
+    docker container start "${container_name}" > /dev/null
+}
 
-docker exec "${CONTAINER_NAME}" pandoc "$@"
+function container_exists {
+    local container_name="$1"
+    local exists
 
+    exists=$(
+        docker ps \
+            --filter "name=${container_name}" \
+            --filter "status=running" \
+        | grep --quiet "${container_name}" \
+    )
+    return $exists
+}
+
+function is_container_running {
+    local container_name="$1"
+    local running
+
+    running=$(
+        docker ps \
+            --filter "name=${container_name}" \
+            --filter "status=running" \
+        | grep --quiet "${container_name}" \
+    )
+    return $running
+}
+
+function create_container {
+    local container_name="$1"
+    docker run --detach --name "${container_name}" \
+        --volume "$(pwd):/data" \
+        --volume "/tmp:/tmp" \
+        --user $(id -u):$(id -g) \
+        --entrypoint /bin/sleep pandoc/core infinity &> /dev/null
+}
+
+function run_pandoc {
+    local container_name="$1"
+    shift
+    docker exec "${container_name}" pandoc "$@"
+}
+
+function main {
+    create_container "${CONTAINER_NAME}"
+    start_container "${CONTAINER_NAME}"
+    run_pandoc "${CONTAINER_NAME}" "$@"
+}
+
+main "$@"
