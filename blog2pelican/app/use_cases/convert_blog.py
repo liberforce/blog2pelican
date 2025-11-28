@@ -8,7 +8,7 @@ from collections.abc import Generator, Iterable
 from typing import cast
 
 from blog2pelican.adapters.blog_readers import create_blog_reader
-from blog2pelican.application.use_cases.convert_post import (
+from blog2pelican.app.use_cases.convert_post import (
     ConvertPostUseCase,
     download_attachments,
 )

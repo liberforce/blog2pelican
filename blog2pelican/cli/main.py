@@ -5,7 +5,7 @@ import pathlib
 
 import pelican.log
 
-from blog2pelican.application.use_cases.convert_blog import ConvertBlogUseCase
+from blog2pelican.app.use_cases.convert_blog import ConvertBlogUseCase
 from blog2pelican.domain.entities.settings import create_settings
 
 logger = logging.getLogger(__name__)

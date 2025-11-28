@@ -5,7 +5,7 @@ from html import unescape
 
 from pelican.utils import SafeDatetime
 
-from blog2pelican.application.use_cases.convert_blog import get_filename
+from blog2pelican.app.use_cases.convert_blog import get_filename
 from blog2pelican.domain.entities.posts import Post
 from blog2pelican.domain.entities.settings import WordPressSettings
 from blog2pelican.domain.ports.blog_reader import BlogReader
