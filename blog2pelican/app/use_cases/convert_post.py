@@ -1,3 +1,4 @@
+import copy
 import logging
 import os.path
 import re
@@ -291,7 +292,7 @@ class ConvertPostUseCase:
         wp_custpost=False,
         wp_attach=False,
         attachments=None,
-    ):
+    ) -> Post:
         slug = (not disable_slugs and post.filename) or None
         assert slug is None or post.filename == os.path.basename(
             post.filename
@@ -318,9 +319,10 @@ class ConvertPostUseCase:
         )
         print(out_filename)
 
+        out_post = copy.copy(post)
         # Convert content
         if post.markup in ("html", "wp-html"):
-            post.content = self.pandoc.convert(
+            out_post.content = self.pandoc.convert(
                 post,
                 out_markup,
                 strip_raw,
@@ -328,7 +330,12 @@ class ConvertPostUseCase:
                 links,
                 out_filename,
             )
-            post.markup = out_markup
+            out_post.markup = out_markup
 
+        self.save(out_post, header, out_filename)
+
+        return out_post
+
+    def save(self, post, header, out_filename):
         with open(out_filename, "w", encoding="utf-8") as fs:
             fs.write(header + post.content)
