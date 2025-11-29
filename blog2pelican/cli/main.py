@@ -11,6 +11,12 @@ from blog2pelican.domain.entities.settings import create_settings
 logger = logging.getLogger(__name__)
 
 
+def comma_separated(string):
+    names = string.split(",")
+    real = names.pop(0)
+    return {alias: real for alias in names}
+
+
 def build_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Transform feed, Blogger, Dotclear, Tumblr, or "
@@ -62,6 +68,16 @@ def build_argument_parser() -> argparse.ArgumentParser:
             dest="allowed_authors",
             help="Import only posts from the specified author. "
             "Use multiple times to allow multiple authors.",
+        )
+        parsers[engine].add_argument(
+            "--use-author-alias",
+            action="append",
+            dest="author_aliases",
+            type=comma_separated,
+            help="List of comma-separated author names. The first name in the "
+            "list is the one that will be used whenever any of the others is "
+            "found."
+            "Use multiple times to use aliases for multiple authors.",
         )
         parsers[engine].add_argument(
             "--disable-slugs",
@@ -116,9 +132,20 @@ def build_argument_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def post_process_args(args):
+    if args.author_aliases:
+        author_aliases = {}
+        for alias_dict in args.author_aliases:
+            author_aliases.update(alias_dict)
+        args.author_aliases = author_aliases
+
+    return args
+
+
 def main():
     argument_parser = build_argument_parser()
     args = argument_parser.parse_args()
+    args = post_process_args(args)
     settings = create_settings(vars(args))
     settings.check()
 

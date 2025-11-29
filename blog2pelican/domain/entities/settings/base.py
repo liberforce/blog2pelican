@@ -31,6 +31,9 @@ class Settings:
     """Author whose posts to import, or None to select all"""
     allowed_authors: list[str] | None = None
 
+    """Real author name to use for each alias"""
+    author_aliases: dict[str, str] | None = None
+
     """Put files in directories with categories name"""
     use_category_subdir: bool = False
 

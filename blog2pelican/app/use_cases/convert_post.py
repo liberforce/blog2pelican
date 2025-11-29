@@ -282,6 +282,10 @@ class ConvertPostUseCase:
     def __init__(self, pandoc=None):
         self.pandoc = Pandoc() if pandoc is None else pandoc
 
+    def replace_author_aliases(self, post: Post, settings: Settings):
+        if settings.author_aliases and post.author in settings.author_aliases:
+            post.author = settings.author_aliases[post.author]
+
     def convert(
         self,
         post: Post,
@@ -297,6 +301,9 @@ class ConvertPostUseCase:
         assert slug is None or post.filename == os.path.basename(
             post.filename
         ), f"filename is not a basename: {post.filename}"
+
+        out_post = copy.copy(post)
+        self.replace_author_aliases(post, settings)
 
         if wp_attach and attachments:
             try:
