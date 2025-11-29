@@ -25,7 +25,6 @@ def test_simple():
             engine="dotclear",
             output_dir=output_dir,
             markup="markdown",
-            allowed_authors=None,
             use_category_subdir=False,
         )
         uc = ConvertPostUseCase()
