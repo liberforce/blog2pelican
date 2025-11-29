@@ -13,10 +13,7 @@ from blog2pelican.app.use_cases.convert_post import (
     download_attachments,
 )
 from blog2pelican.domain.entities.posts import Post
-from blog2pelican.domain.entities.settings import (
-    Settings,
-    WordPressSettings,
-)
+from blog2pelican.domain.entities.settings import Settings, WordPressSettings
 from blog2pelican.domain.ports.blog_reader import BlogReader
 from blog2pelican.helpers.pandoc import Pandoc
 from blog2pelican.helpers.soup import soup_from_xml_file

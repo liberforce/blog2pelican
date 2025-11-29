@@ -47,9 +47,7 @@ class Pandoc:
         # Replace newlines with paragraphs wrapped with <p> so
         # HTML is valid before conversion
         if post.markup == "wp-html":
-            from blog2pelican.adapters.blog_readers.wordpress import (
-                WordPressReader,
-            )
+            from blog2pelican.adapters.blog_readers.wordpress import WordPressReader
 
             html_content = WordPressReader.decode_wp_content(post.content)
         elif post.markup in ["xhtml", "html"]:
