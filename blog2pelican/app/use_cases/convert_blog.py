@@ -37,7 +37,7 @@ def get_filename(post_name, post_id):
 
 
 def create_output_dir_if_required(dirname: str | pathlib.Path):
-    if not os.path.exists(dirname):
+    if not os.path.isdir(dirname):
         try:
             os.mkdir(dirname)
         except OSError:
