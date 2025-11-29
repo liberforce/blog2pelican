@@ -94,7 +94,7 @@ class Pandoc:
             "--from",
             "html+raw_html" if not strip_raw else "html",
             "--to",
-            (out_markup if out_markup != "markdown" else "gfm") + "-smart",
+            "markdown_strict" if out_markup == "markdown" else f"{out_markup}-smart",
             "--wrap",
             "none",
             "--output",
