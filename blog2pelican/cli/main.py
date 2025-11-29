@@ -53,7 +53,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
         parsers[engine].add_argument(
             "--dir-cat",
             action="store_true",
-            dest="dircat",
+            dest="use_category_subdir",
             help="Put files in directories with categories name",
         )
         parsers[engine].add_argument(

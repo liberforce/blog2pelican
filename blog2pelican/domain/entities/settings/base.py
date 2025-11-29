@@ -32,7 +32,7 @@ class Settings:
     allowed_authors: list[str] | None
 
     """Put files in directories with categories name"""
-    dircat: bool
+    use_category_subdir: bool = False
 
     """ Disable storing slugs from imported posts within output"""
     disable_slugs: bool = False

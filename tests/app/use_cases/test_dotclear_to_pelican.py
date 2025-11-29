@@ -26,7 +26,7 @@ def test_simple():
             output_dir=output_dir,
             markup="markdown",
             allowed_authors=None,
-            dircat=False,
+            use_category_subdir=False,
         )
         uc = ConvertPostUseCase()
         actual = uc.convert(post, settings, output_dir)
