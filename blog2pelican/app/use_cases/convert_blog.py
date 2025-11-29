@@ -58,10 +58,7 @@ class ConvertBlogUseCase:
         attachments = self.extract_attachments(settings)
         self.convert(posts, settings, attachments)
 
-    def extract_posts(
-        self,
-        settings: Settings,
-    ) -> Generator[Post]:
+    def extract_posts(self, settings: Settings) -> Generator[Post]:
         blog_reader: BlogReader = create_blog_reader(settings.engine)
         blog_reader.use_settings(settings)
         return blog_reader.read_posts(settings.input)
