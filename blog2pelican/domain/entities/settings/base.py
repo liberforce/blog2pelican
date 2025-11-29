@@ -34,5 +34,8 @@ class Settings:
     """Put files in directories with categories name"""
     dircat: bool
 
+    """ Disable storing slugs from imported posts within output"""
+    disable_slugs: bool = False
+
     def check(self):
         """Check if the settings are consistent for the selected engine"""

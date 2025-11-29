@@ -288,13 +288,12 @@ class ConvertPostUseCase:
         settings: Settings,
         tmpdir: str | None = None,
         strip_raw=False,
-        disable_slugs=False,
         dirpage=False,
         wp_custpost=False,
         wp_attach=False,
         attachments=None,
     ) -> Post:
-        slug = (not disable_slugs and post.filename) or None
+        slug = None if settings.disable_slugs else post.filename
         assert slug is None or post.filename == os.path.basename(
             post.filename
         ), f"filename is not a basename: {post.filename}"
