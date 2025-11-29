@@ -52,7 +52,7 @@ class ConvertBlogUseCase:
     def convert_blog(self, settings: Settings):
         posts = self.read_posts(settings)
         create_output_dir_if_required(settings.output_dir)
-        self.convert(posts, settings)
+        self.convert_posts(posts, settings)
 
     def read_posts(self, settings: Settings) -> Generator[Post]:
         blog_reader: BlogReader = create_blog_reader(settings.engine)
@@ -143,7 +143,7 @@ class ConvertBlogUseCase:
             attachedposts[parent_name].add(url)
         return attachedposts
 
-    def convert(
+    def convert_posts(
         self,
         posts: Iterable[Post],
         settings: Settings,
