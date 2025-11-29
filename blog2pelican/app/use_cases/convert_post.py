@@ -161,7 +161,7 @@ def get_out_filename(
         else:
             typename = ""
             kind = "article"
-        if dircat and (len(categories) > 0):
+        if dircat and categories:
             catname = slugify(categories[0], regex_subs=slug_subs, preserve_case=True)
         else:
             catname = ""
@@ -169,7 +169,7 @@ def get_out_filename(
         if not os.path.isdir(os.path.join(output_path, typename, catname)):
             os.makedirs(os.path.join(output_path, typename, catname))
     # option to put files in directories with categories names
-    elif dircat and (len(categories) > 0):
+    elif dircat and categories:
         catname = slugify(categories[0], regex_subs=slug_subs, preserve_case=True)
         out_filename = os.path.join(output_path, catname, filename + ext)
         if not os.path.isdir(os.path.join(output_path, catname)):
