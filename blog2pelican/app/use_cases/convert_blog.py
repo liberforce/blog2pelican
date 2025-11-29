@@ -52,8 +52,7 @@ class ConvertBlogUseCase:
     def convert_blog(self, settings: Settings):
         posts = self.extract_posts(settings)
         create_output_dir_if_required(settings.output_dir)
-        attachments = self.extract_attachments(settings)
-        self.convert(posts, settings, attachments)
+        self.convert(posts, settings)
 
     def extract_posts(self, settings: Settings) -> Generator[Post]:
         blog_reader: BlogReader = create_blog_reader(settings.engine)
@@ -64,13 +63,14 @@ class ConvertBlogUseCase:
         self,
         post: Post,
         settings: Settings,
-        pandoc_tmpdir: str | None = None,
-        strip_raw=False,
-        dirpage=False,
-        wp_custpost=False,
-        wp_attach=False,
+        pandoc_tmpdir: str | None,
         attachments=None,
     ):
+        strip_raw = getattr(settings, "strip_raw", False)
+        dirpage = getattr(settings, "dirpage", False)
+        wp_custpost = getattr(settings, "wp_custpost", False)
+        wp_attach = getattr(settings, "wp_attach", False)
+
         if (
             settings.allowed_authors is not None
             and post.author not in settings.allowed_authors
@@ -147,9 +147,8 @@ class ConvertBlogUseCase:
         self,
         posts: Iterable[Post],
         settings: Settings,
-        attachments,
     ):
-        args = vars(settings)
+        attachments = self.extract_attachments(settings)
         posts_require_pandoc = []
         with tempfile.TemporaryDirectory() as pandoc_tmpdir:
             for post in posts:
@@ -158,11 +157,7 @@ class ConvertBlogUseCase:
                         post,
                         settings,
                         pandoc_tmpdir,
-                        dirpage=args.get("dirpage", False),
-                        strip_raw=args.get("strip_raw", False),
-                        wp_custpost=args.get("wp_custpost", False),
-                        wp_attach=args.get("wp_attach", False),
-                        attachments=attachments or None,
+                        attachments,
                     )
                 except MissingPandocError:
                     posts_require_pandoc.append(post.filename)
