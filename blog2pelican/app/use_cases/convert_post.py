@@ -290,7 +290,6 @@ class ConvertPostUseCase:
         strip_raw=False,
         disable_slugs=False,
         dirpage=False,
-        filter_author=None,
         wp_custpost=False,
         wp_attach=False,
         attachments=None,

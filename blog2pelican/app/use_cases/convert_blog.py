@@ -75,12 +75,14 @@ class ConvertBlogUseCase:
         strip_raw=False,
         disable_slugs=False,
         dirpage=False,
-        allowed_authors=None,
         wp_custpost=False,
         wp_attach=False,
         attachments=None,
     ):
-        if allowed_authors and post.author not in allowed_authors:
+        if (
+            settings.allowed_authors is not None
+            and post.author not in settings.allowed_authors
+        ):
             return
 
         if is_pandoc_needed(post.markup) and not self.pandoc.version:
@@ -94,7 +96,6 @@ class ConvertBlogUseCase:
             strip_raw,
             disable_slugs,
             dirpage,
-            allowed_authors,
             wp_custpost,
             wp_attach,
             attachments,
@@ -170,7 +171,6 @@ class ConvertBlogUseCase:
                         dirpage=args.get("dirpage", False),
                         strip_raw=args.get("strip_raw", False),
                         disable_slugs=args.get("disable_slugs", False),
-                        allowed_authors=settings.allowed_authors,
                         wp_custpost=args.get("wp_custpost", False),
                         wp_attach=args.get("wp_attach", False),
                         attachments=attachments or None,
