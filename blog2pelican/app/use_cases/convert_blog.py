@@ -70,7 +70,6 @@ class ConvertBlogUseCase:
         self,
         post: Post,
         settings: Settings,
-        output_path,
         pandoc_tmpdir: str | None = None,
         strip_raw=False,
         disable_slugs=False,
@@ -104,7 +103,7 @@ class ConvertBlogUseCase:
         if wp_attach and attachments and None in attachments:
             print("downloading attachments that don't have a parent post")
             urls = attachments[None]
-            download_attachments(output_path, urls)
+            download_attachments(settings.output_dir, urls)
 
     def extract_attachments(self, settings: Settings):
         """
@@ -166,7 +165,6 @@ class ConvertBlogUseCase:
                     self.convert_post(
                         post,
                         settings,
-                        settings.output_dir,
                         pandoc_tmpdir,
                         dirpage=args.get("dirpage", False),
                         strip_raw=args.get("strip_raw", False),
