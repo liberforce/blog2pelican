@@ -1,6 +1,7 @@
 import copy
 import logging
 import os.path
+import pathlib
 import re
 import sys
 from urllib.error import URLError
@@ -177,7 +178,10 @@ def get_out_filename(
     return out_filename
 
 
-def download_attachments(output_path: str, urls: list[str]) -> dict[str, str]:
+def download_attachments(
+    output_path: pathlib.Path,
+    urls: list[str],
+) -> dict[str, str]:
     """Downloads WordPress attachments and returns a list of paths to
     attachments that can be associated with a post (relative path to output
     directory). Files that fail to download, will not be added to posts"""
@@ -282,7 +286,6 @@ class ConvertPostUseCase:
         self,
         post: Post,
         settings: Settings,
-        output_path,
         tmpdir: str | None = None,
         dircat=False,
         strip_raw=False,
@@ -301,7 +304,7 @@ class ConvertPostUseCase:
         if wp_attach and attachments:
             try:
                 urls = attachments[post.filename]
-                links = download_attachments(output_path, urls)
+                links = download_attachments(settings.output_dir, urls)
             except KeyError:
                 links = None
         else:
@@ -313,7 +316,7 @@ class ConvertPostUseCase:
             slug,
             attachments,
             links,
-            output_path,
+            settings.output_dir,
             dirpage,
             wp_custpost,
         )

@@ -91,7 +91,6 @@ class ConvertBlogUseCase:
         pc.convert(
             post,
             settings,
-            output_path,
             pandoc_tmpdir,
             dircat,
             strip_raw,
