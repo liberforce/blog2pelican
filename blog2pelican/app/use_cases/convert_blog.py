@@ -50,11 +50,11 @@ class ConvertBlogUseCase:
         self.pandoc = Pandoc()
 
     def convert_blog(self, settings: Settings):
-        posts = self.extract_posts(settings)
+        posts = self.read_posts(settings)
         create_output_dir_if_required(settings.output_dir)
         self.convert(posts, settings)
 
-    def extract_posts(self, settings: Settings) -> Generator[Post]:
+    def read_posts(self, settings: Settings) -> Generator[Post]:
         blog_reader: BlogReader = create_blog_reader(settings.engine)
         blog_reader.use_settings(settings)
         return blog_reader.read_posts(settings.input)
