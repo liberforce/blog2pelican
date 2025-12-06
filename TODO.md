@@ -1,0 +1,5 @@
+- Refactor to split Settings into ReaderSettings and WriterSettings
+- Configure Pelican accept GitHub-flavored markdown or switch to markdown_strict
+- Fix image linking
+- Port attachment-handling code to dotclear
+- Support engine= to select the blog engine to import from
