@@ -2,6 +2,7 @@ import logging
 import subprocess
 import sys
 import tempfile
+from typing import Literal
 
 from blog2pelican.domain.entities.posts import Post
 
@@ -61,7 +62,7 @@ class Pandoc:
 
     def _build_legacy_pandoc_cmd(
         self,
-        out_markup: str,
+        out_markup: Literal["markdown", "rst"],
         strip_raw: bool,
         out_filename: str,
         html_filename: str,
@@ -84,7 +85,7 @@ class Pandoc:
 
     def _build_modern_pandoc_cmd(
         self,
-        out_markup: str,
+        out_markup: Literal["markdown", "rst"],
         strip_raw: bool,
         out_filename: str,
         html_filename: str,
@@ -108,7 +109,7 @@ class Pandoc:
 
     def _build_pandoc_cmd(
         self,
-        out_markup: str,
+        out_markup: Literal["markdown", "rst"],
         strip_raw: bool,
         out_filename: str,
         html_filename: str,
@@ -142,7 +143,7 @@ class Pandoc:
     def convert(
         self,
         post: Post,
-        out_markup: str,
+        out_markup: Literal["markdown", "rst"],
         strip_raw: bool,
         wp_attach: bool,
         links: dict[str, str],
