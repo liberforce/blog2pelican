@@ -1,5 +1,6 @@
-- Refactor to split Settings into ReaderSettings and WriterSettings
-- Configure Pelican accept GitHub-flavored markdown or switch to markdown_strict
-- Fix image linking
-- Port attachment-handling code to dotclear
-- Support engine= to select the blog engine to import from
+- [ ] Refactor to split Settings into ReaderSettings and WriterSettings
+- [x] Configure Pelican to accept pandoc's markdown as an input format
+- [ ] Fix image linking
+- [ ] Port attachment-handling code to dotclear
+- [ ] Support `engine=` to select the blog engine to import from
+- [ ] Allow to choose the output dialect: pandoc markdown or github flavored markdown
