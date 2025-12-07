@@ -89,12 +89,15 @@ class Pandoc:
         out_filename: str,
         html_filename: str,
     ):
+        # markdown-smart will disable the smart extension that causes single
+        # quotes to be converted to escaped quotes in the resulting markdown
+        # See: https://stackoverflow.com/a/53682013
         cmd = [
             "pandoc",
             "--from",
             "html+raw_html" if not strip_raw else "html",
             "--to",
-            "markdown_strict" if out_markup == "markdown" else f"{out_markup}-smart",
+            f"{out_markup}-smart",
             "--wrap",
             "none",
             "--output",

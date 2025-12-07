@@ -81,7 +81,43 @@ def build_asciidoc_header(
     return header
 
 
-def build_markdown_header(
+def build_pandoc_markdown_header(
+    title,
+    date,
+    author,
+    categories,
+    tags,
+    slug,
+    status=None,
+    attachments=None,
+):
+    """
+    Build a header from a list of fields.
+    The format is the one consumed by the pandoc-reader pelican plugin for
+    metadata.
+    """
+    header = "---\n"
+    header += f'title: "{title}"\n'
+    if date:
+        header += f'date: "{date}"\n'
+    if author:
+        header += f'author: "{author}"\n'
+    if categories:
+        header += 'category: "{}"\n'.format(", ".join(categories))
+    if tags:
+        header += 'tags: "{}"\n'.format(", ".join(tags))
+    if slug:
+        header += f'slug: "{slug}"\n'
+    if status:
+        header += f'status: "{status}"\n'
+    if attachments:
+        header += 'attachments: "{}"\n'.format(", ".join(attachments))
+    header += "---"
+    header += "\n"
+    return header
+
+
+def build_pelican_markdown_header(
     title,
     date,
     author,
@@ -242,7 +278,8 @@ def get_output_data(
             attachments,
         )
     elif ext == ".md":
-        header = build_markdown_header(
+        # FIXME: allow to choose between different markdown dialects
+        header = build_pandoc_markdown_header(
             post.title,
             post.date,
             post.author,
