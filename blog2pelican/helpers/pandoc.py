@@ -201,6 +201,9 @@ class Pandoc:
                 content = content.replace("\\\n ", "  \n")
                 content = content.replace("\\\n", "  \n")
 
+                # FIXME: adapt to your media URLs
+                content = content.replace("/public/", "{static}/images/")
+
         if wp_attach and links:
             content = self.update_links_to_attached_files(content, links)
 
