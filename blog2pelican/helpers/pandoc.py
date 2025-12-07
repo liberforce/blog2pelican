@@ -83,6 +83,17 @@ class Pandoc:
 
         return cmd
 
+    def _build_pandoc_format_string(
+        self,
+        format_: Literal["markdown", "rst"],
+        extensions_dict: dict[str, dict[str, list[str]]],
+    ) -> str:
+        enabled = extensions_dict.setdefault(format_, {}).get("enabled", [])
+        disabled = extensions_dict.setdefault(format_, {}).get("disabled", [])
+        str_enabled = "".join([f"+{ext}" for ext in enabled])
+        str_disabled = "".join([f"-{ext}" for ext in disabled])
+        return f"{format_}{str_enabled}{str_disabled}"
+
     def _build_modern_pandoc_cmd(
         self,
         out_markup: Literal["markdown", "rst"],
@@ -90,6 +101,12 @@ class Pandoc:
         out_filename: str,
         html_filename: str,
     ):
+        output_format_extensions = {
+            "markdown": {
+                "disabled": ["smart"],
+            }
+        }
+
         # markdown-smart will disable the smart extension that causes single
         # quotes to be converted to escaped quotes in the resulting markdown
         # See: https://stackoverflow.com/a/53682013
@@ -98,7 +115,10 @@ class Pandoc:
             "--from",
             "html+raw_html" if not strip_raw else "html",
             "--to",
-            f"{out_markup}-smart",
+            self._build_pandoc_format_string(
+                out_markup,
+                output_format_extensions,
+            ),
             "--wrap",
             "none",
             "--output",
