@@ -4,3 +4,4 @@
 - [ ] Port attachment-handling code to dotclear
 - [ ] Support `engine=` to select the blog engine to import from
 - [ ] Allow to choose the output dialect: pandoc markdown or github flavored markdown
+- [ ] Check if articles can be written in per year directory
